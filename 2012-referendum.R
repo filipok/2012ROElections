@@ -1,5 +1,5 @@
 ################################################################################
-ref.2012.sv <- read.csv("2012AlegeriRomania/2012referendum/2. rezultate/sv_date.csv", sep = ";", 
+ref.2012.sv <- read.csv("2012referendum/2. rezultate/sv_date.csv", sep = ";", 
                            stringsAsFactors = FALSE)
 ################################################################################
 colnames(ref.2012.sv)[1] <- "JUD"
