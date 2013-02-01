@@ -1,4 +1,4 @@
-#CARE E SURSA DIFERENŢELOR DINTRE TAP Şi SITUAŢIA PRE-ALEGERI?
+#CARE E SURSA DIFERENŢELOR DINTRE TAP ŞI SITUAŢIA PRE-ALEGERI?
 #
 #
 #?funcţii pentru selectarea unui anumit judeţ sau comune din judeţ
@@ -25,7 +25,7 @@
 #cju.cum.circ <- CumulatCirc(CJU) #cumulare pe bază de secţie de votare
 #pcj.cum.circ <- CumulatCirc(PCJ) #cumulare pe bază de secţie de votare
 #
-#pe secţie de votare - pentru PRI ţi CLO avem date doar pentru Bucureşti
+#pe secţie de votare - pentru PRI şi CLO avem date doar pentru Bucureşti
 #pcj.abs.sv <- AbsolutSv(PCJ)
 #cju.abs.sv <- AbsolutSv(CJU)
 #clo.abs.sv.buc <- AbsolutSv(CLO, TRUE)
