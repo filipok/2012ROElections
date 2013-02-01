@@ -44,10 +44,10 @@
 
 #
 #clear everything
-#rm(list = ls(all = TRUE))
+rm(list = ls(all = TRUE))
 #
 ################################################################################
-locale2012 <- read.csv("2012AlegeriRomania/2012locale/x_baza.csv", sep = ";", 
+locale2012 <- read.csv("2012locale/x_baza.csv", sep = ";", 
                        stringsAsFactors = FALSE)
 ################################################################################
 locale2012$DEN_CIRC <- gsub("23.aug", "23 AUGUST", locale2012$DEN_CIRC) #eroare
@@ -69,7 +69,7 @@ CJU <- tipuri[[4]]
 rm(tipuri)
 ################################################################################
 #încărcare statistica sectii pre-alegeri
-aleg.loc.2012 <- read.csv("2012AlegeriRomania/2012locale/1. statistici/_statistica_alegatori_pe_sectii_de_vot_locale_2012.csv"
+aleg.loc.2012 <- read.csv("2012locale/1. statistici/_statistica_alegatori_pe_sectii_de_vot_locale_2012.csv"
                        , sep = ";", stringsAsFactors = FALSE)
 ################################################################################
 colnames(aleg.loc.2012)[1] <- "CIRC"
@@ -91,7 +91,7 @@ aleg.loc.2012$Numar.alegatori <- as.numeric(aleg.loc.2012$Numar.alegatori)
 #
 ################################################################################
 #încărcare denumiri secţii de votare locale 2012 şi schimbare ca la referend2012
-nume.sec.loc.2012 <- read.csv("2012AlegeriRomania/2012locale/sv.csv", sep = ";", 
+nume.sec.loc.2012 <- read.csv("2012locale/sv.csv", sep = ";", 
                               stringsAsFactors = FALSE)
 ################################################################################
 # nume.sec.loc.2012$adresa <- toupper(nume.sec.loc.2012$adresa)
@@ -121,7 +121,7 @@ new.prim <- PRI[PRI$MAN_1 == 1,c("JUD","DEN_JUD", "CIRC", "DEN_CIRC", "SV",
 TUR2.prim <- TUR2[TUR2$TIPPV ==1 & TUR2$MAN_1 == 1, 
                   c("JUD", "DEN_JUD", "CIRC", "DEN_CIRC", "SV", "CODU")]
 new.prim <- rbind(new.prim, TUR2.prim)
-echivalare.coduri <- read.csv("2012AlegeriRomania/2012locale/coduri-partide.csv", sep = ";", 
+echivalare.coduri <- read.csv("2012locale/coduri-partide.csv", sep = ";", 
                               stringsAsFactors = FALSE)
 new.prim <- merge (new.prim, echivalare.coduri, all.x = TRUE)
 new.prim <- merge (new.prim, unique(nume.sec.loc.2012[,c(1:5)]), 

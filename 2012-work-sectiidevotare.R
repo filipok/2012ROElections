@@ -1,9 +1,9 @@
 rm(list = ls(all = TRUE))
 ################################################################################
 #Apel cod pentru locale, referendum şi parlamentare
-source("2012AlegeriRomania/2012-locale.R")
-source("2012AlegeriRomania/2012-referendum.R")
-source("2012AlegeriRomania/2012-parlamentare.R")
+source("2012-locale.R")
+source("2012-referendum.R")
+source("2012-parlamentare.R")
 ################################################################################
 
 

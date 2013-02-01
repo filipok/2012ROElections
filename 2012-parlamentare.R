@@ -4,14 +4,14 @@
 
 #Atenţie! Aici şterg tot ce e în memoria R.
 #rm(list = ls(all = TRUE))
-nume.sec.parl.2012 <- read.csv("2012AlegeriRomania/2012parlamentare/sv_bec.csv", sep = ";", 
+nume.sec.parl.2012 <- read.csv("2012parlamentare/sv_bec.csv", sep = ";", 
                                stringsAsFactors = FALSE)
 nume.sec.parl.2012 <- nume.sec.parl.2012[nume.sec.parl.2012$'Nr..Crt' != "" & 
   nume.sec.parl.2012$'Nr..Crt' != "TOTAL",]
 colnames(nume.sec.parl.2012)[2:8] <- c("JUD", "siruta", "DEN_CIRC", "SV", 
                                        "COL_CD", "COL_SE", "Adresa.parl")
 parlamentare2012 <- 
-  read.csv("2012AlegeriRomania/2012parlamentare/RezultateNivelSectieParlamentare2012.csv", 
+  read.csv("2012parlamentare/RezultateNivelSectieParlamentare2012.csv", 
            sep = ";", stringsAsFactors = FALSE, encoding  = "UTF-8")
 colnames(parlamentare2012)[1:4] <- c("JUD", "DEN_JUD", "SV", "DEN_CIRC")
 camere <- split(parlamentare2012, parlamentare2012$numeTipColegiu)
@@ -125,7 +125,7 @@ cdep.judet <- CumulatJudet(cdep.sv)
 library(xlsReadWrite) #Este necesară utilizarea pachetului xlsReadWrite
 #Sursa datelor: http://www.roaep.ro/ro/section.php?id=25&l2=48&ids=121&an=2012
 #(descărcate la 27.12.2012)
-lista <- list.files("2012AlegeriRomania\\2012parlamentare\\SV_ROAEP\\judete") #A se schimba după caz
+lista <- list.files("2012parlamentare\\SV_ROAEP\\judete") #A se schimba după caz
 judete <- list()
 #Fişierele ROAEP sunt în general similare, dar mai apar diferenţe în privinţa
 #sheet-ului pe care sunt datele (sheet.ales) şi a rândului de la care încep
@@ -150,7 +150,7 @@ for (i in lista){
     rand.initial <- 8}
   if (i == "tl_parlam2012_v1.xls"){
     sheet.ales <- 1}
-  nume <- paste ("2012AlegeriRomania\\2012parlamentare\\SV_ROAEP\\judete\\", i, sep = "")
+  nume <- paste ("2012parlamentare\\SV_ROAEP\\judete\\", i, sep = "")
   judete[[i]] <- read.xls(nume, sheet = sheet.ales, from = rand.initial, 
                           stringsAsFactors = FALSE, colClasses = "character")
   if (i != "ct_parlam_2012_final.xls" & i != "vs_parlam2012_v3.xls"){
@@ -606,7 +606,7 @@ sen.sv <- merge(sen.sv, romania, all.x = TRUE)
 #Import Siruta2008
 ##################
 #Fişierul este de la http://earth.unibuc.ro/download/romania-seturi-vectoriale
-siruta2008 <- read.csv("2012AlegeriRomania/siruta2008/localitati2008_iso8859_2.csv", sep = ",", 
+siruta2008 <- read.csv("siruta2008/localitati2008_iso8859_2.csv", sep = ",", 
                       stringsAsFactors = FALSE)
 #Scurtăm codul Siruta, pentru a corespunde formatului de la ROAEP
 siruta2008[4] <- sapply(siruta2008[4], function(qqq) strtrim(qqq,nchar(qqq)-1))
@@ -649,14 +649,14 @@ rm(romania, judete, i, k, lista, nume, rand.initial, sheet.ales)
 #EXPORT CSV
 ###########
 #La nivel de secţie de votare, cu cod SIRUTA şi lat/long
-#write.table(x=cdep.sv, file="2012AlegeriRomania/CSV/2012cdepsv.csv", row.names = FALSE)
-#write.table(x=sen.sv, file="2012AlegeriRomania/CSV/2012sensv.csv", row.names = FALSE)
+#write.table(x=cdep.sv, file="CSV/2012cdepsv.csv", row.names = FALSE)
+#write.table(x=sen.sv, file="CSV/2012sensv.csv", row.names = FALSE)
 #La nivel de oraş/comună
-#write.table(x=cdep.circ, file="2012AlegeriRomania/CSV/2012cdepcirc.csv", row.names = FALSE)
-#write.table(x=sen.circ, file="2012AlegeriRomania/CSV/2012sencirc.csv", row.names = FALSE)
+#write.table(x=cdep.circ, file="CSV/2012cdepcirc.csv", row.names = FALSE)
+#write.table(x=sen.circ, file="CSV/2012sencirc.csv", row.names = FALSE)
 #La nivel de colegiu
-#write.table(x=cdep.colegiu, file="2012AlegeriRomania/CSV/2012cdepcolegiu.csv", row.names = FALSE)
-#write.table(x=sen.colegiu, file="2012AlegeriRomania/CSV/2012sencolegiu.csv", row.names = FALSE)
+#write.table(x=cdep.colegiu, file="CSV/2012cdepcolegiu.csv", row.names = FALSE)
+#write.table(x=sen.colegiu, file="CSV/2012sencolegiu.csv", row.names = FALSE)
 #La nivel de judeţ
-#write.table(x=cdep.judet, file="2012AlegeriRomania/CSV/2012cdepjudet.csv", row.names = FALSE)
-#write.table(x=sen.judet, file="2012AlegeriRomania/CSV/2012senjudet.csv", row.names = FALSE)
+#write.table(x=cdep.judet, file="CSV/2012cdepjudet.csv", row.names = FALSE)
+#write.table(x=sen.judet, file="CSV/2012senjudet.csv", row.names = FALSE)
