@@ -44,7 +44,7 @@
 
 #
 #clear everything
-rm(list = ls(all = TRUE))
+#rm(list = ls(all = TRUE))
 #
 ################################################################################
 locale2012 <- read.csv("2012locale/x_baza.csv", sep = ";", 
