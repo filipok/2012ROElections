@@ -13,9 +13,9 @@ ref.2012.sv$DEN_JUD <- gsub("CĂLĂRAŞI", "CALARAŞI", ref.2012.sv$DEN_JUD) #sp
 ref.2012.sv$DEN_JUD <- gsub("CONSTANTA", "CONSTANŢA", ref.2012.sv$DEN_JUD) #spelling
 ref.2012.sv$DEN_JUD <- gsub("SĂLAJ", "SALAJ", ref.2012.sv$DEN_JUD) #spelling
 ref.2012.sv$DEN_JUD <- gsub("Municipiul Bucuresti", "MUNICIPIUL BUCUREŞTI", ref.2012.sv$DEN_JUD) #spelling
-#am siruta la referendum ?i am ?i la sv.xlsx ?n locale 2012
+#am siruta la referendum şi am şi la sv.xlsx în locale 2012
 #
-# cumulare la nivel de CIRC/SIRUTA (similar func?iei CumulatCirc din locale2012)
+# cumulare la nivel de CIRC/SIRUTA (similar funcţiei CumulatCirc din locale2012)
 work <- ref.2012.sv[ref.2012.sv$tara == "",]
 ref.2012.circ <- aggregate(subset(work, 
                                   select = -c(JUD, DEN_JUD, tara, siruta, SV, 
@@ -32,7 +32,7 @@ ref.2012.circ1 <- ref.2012.circ[,c("JUD", "DEN_JUD", "siruta", "DEN_CIRC_R")]
 ref.2012.circ2 <- subset(ref.2012.circ, select = -c(JUD, siruta, DEN_JUD, DEN_CIRC_R))
 ref.2012.circ <- cbind(ref.2012.circ1, ref.2012.circ2)
 rm(ref.2012.circ1, ref.2012.circ2)
-#cumulare la nivel de jude?
+#cumulare la nivel de judeţ
 work <- ref.2012.sv[ref.2012.sv$tara == "",]
 ref.2012.jud <- aggregate(subset(work, 
                                  select = -c(JUD, DEN_JUD, tara, siruta, SV, 
@@ -47,7 +47,7 @@ ref.2012.jud1 <- ref.2012.jud[,c("JUD", "DEN_JUD")]
 ref.2012.jud2 <- subset(ref.2012.jud, select = -c(JUD, DEN_JUD))
 ref.2012.jud <- cbind(ref.2012.jud1, ref.2012.jud2)
 rm(ref.2012.jud1, ref.2012.jud2, coloane)
-#cumulare la nivel na?ional
+#cumulare la nivel naţional
 ref.2012.nat <- aggregate(subset(ref.2012.sv, select = -c(mediu, sortare, moc, 
                                                              sector, adresa, SV, 
                                                              DEN_CIRC_R, siruta, tara, 
@@ -56,7 +56,7 @@ ref.2012.nat <- aggregate(subset(ref.2012.sv, select = -c(mediu, sortare, moc,
 colnames(ref.2012.nat)[1] <- "Tara"
 ref.2012.nat[1,1] <- "ROMANIA"
 rm(work)
-#func?ie procente
+#funcţie procente
 Procente.Ref = function (x){
   work <- subset(x, select = -c(tapu, vveda, vvenu, tvn, nvc))
   work$TAPU_P_Ref <- x$tapu/x$ta
@@ -72,6 +72,6 @@ ref.2012.circ.pro <- Procente.Ref(ref.2012.circ)
 ref.2012.jud.pro <- Procente.Ref(ref.2012.jud)
 ref.2012.sv.nat <- Procente.Ref(ref.2012.nat)
 
-#vizualizare participare maxim?
+#vizualizare participare maximă
 #q<- ref.2012.sv.pro[ref.2012.sv.pro$TAPU_P > 1 & ref.2012.sv.pro$tara == "",]
 #View(q[order(q$TAPU_P),])

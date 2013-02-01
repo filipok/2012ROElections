@@ -1,14 +1,16 @@
-# #Aici am început sã corectez denumirile localitãşilor de la parlamentare
-# #în funcşie de ortografia de la referendum, dar pe urmã mi-am dat seama
-# #cã pot folosi codul Siruta ca cheie comunã ºi nu am continuat. Au rãmas
-# #oricum puşine denumiri diferite.
+#Au rÄƒmas douÄƒ valori cu semn de Ã®ntrebare Ã®n loc de diacritice, sunt erori
+#necorectate de la instalarea GIT
+
+# #Aici am Ã®nceput sÄƒ corectez denumirile localitÄƒÅ£ilor de la parlamentare
+# #Ã®n funcÅ£ie de ortografia de la referendum, dar pe urmÄƒ mi-am dat seama
+# #cÄƒ pot folosi codul Siruta ca cheie comunÄƒ ÅŸi nu am continuat.
 # a.par[a.par$DEN_CIRC == "ORAS CIMPENI",][4] <- "ORAS CAMPENI"
 # a.par[a.par$DEN_CIRC == "CERU BACAINTI",][4] <- "CERU-BACAINTI"
 # a.par[a.par$DEN_CIRC == "GIRBOVA",][4] <- "GARBOVA"
 # a.par[a.par$DEN_CIRC == "GIRDA DE SUS",][4] <- "GARDA DE SUS"
 # a.par[a.par$DEN_CIRC == "HOPIRTA",][4] <- "HOPARTA"
 # a.par[a.par$DEN_CIRC == "SINCEL",][4] <- "SANCEL"
-# a.par[a.par$DEN_CIRC == "BELETI-NEGRESTI",][4] <- "BELETI – NEGRESTI"
+# a.par[a.par$DEN_CIRC == "BELETI-NEGRESTI",][4] <- "BELETI ? NEGRESTI"
 # a.par[a.par$DEN_CIRC == "CAPILNA",][4] <- "CAPALNA"
 # a.par[a.par$DEN_CIRC == "CIMPANI",][4] <- "CAMPANI"
 # a.par[a.par$DEN_CIRC == "SIMBATA",][4] <- "SAMBATA"
@@ -57,6 +59,6 @@
 # a.par[a.par$DEN_CIRC == "MUNICIPIUL BUCURESTI SECTORUL 6",][4] <- "BUCURESTI SECTOR 6"
 # a.par[a.par$DEN_CIRC == "RIMETEA",][4] <- "RAMETEA"
 # a.par[a.par$DEN_CIRC == "RIMET",][4] <- "RAMET"
-# a.par[a.par$DEN_CIRC == "COMANDAU",][4] <- "COMANDÆU"
-# #Denumire comunã schimbatã complet
+# a.par[a.par$DEN_CIRC == "COMANDAU",][4] <- "COMAND?U"
+# #Denumire comunÄƒ schimbatÄƒ complet
 # a.par[a.par$DEN_CIRC == "SANIOB",][4] <- "CIUHOI"

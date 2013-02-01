@@ -1,41 +1,41 @@
-#CARE E SURSA DIFEREN?ELOR DINTRE TAP ?i SITUA?IA PRE-ALEGERI?
+#CARE E SURSA DIFERENŢELOR DINTRE TAP Şi SITUAŢIA PRE-ALEGERI?
 #
 #
-#?func?ii pentru selectarea unui anumit jude? sau comune din jude?
+#?funcţii pentru selectarea unui anumit judeţ sau comune din judeţ
 #
-#Acest script prelucreaz? rezultatele alegerilor locale din 2012 din Rom?nia
+#Acest script prelucrează rezultatele alegerilor locale din 2012 din România
 #
-#Preg?tire: del cols C, E, G, I, AQ, AS, AU in x_baza.xlsx & save as x_baza.csv
+#Pregătire: del cols C, E, G, I, AQ, AS, AU in x_baza.xlsx & save as x_baza.csv
 #
 ###################################
-#Exemple de utilizare a func?iilor#
+#Exemple de utilizare a funcţiilor#
 ###################################
-#pe jude? pentru cele unde avem CIRC = 0
+#pe judeţ pentru cele unde avem CIRC = 0
 #cju.abs.jud <- AbsolutJudet(CJU)
 #pcj.abs.jud <- AbsolutJudet(PCJ)
-#pe jude? pentru cele unde nu avem CIRC = 0, cu agregare independen?i
-#clo.cum.jud <- CumulatJudet(CLO) #cumulare pe baz? de circumscrip?ie
-#pri.cum.jud <- CumulatJudet(PRI) #cumulare pe baz? de circumscrip?ie
+#pe judeţ pentru cele unde nu avem CIRC = 0, cu agregare independenţi
+#clo.cum.jud <- CumulatJudet(CLO) #cumulare pe bază de circumscripţie
+#pri.cum.jud <- CumulatJudet(PRI) #cumulare pe bază de circumscripţie
 #
-#pe circumscrip?ie -> CIRC != 0 & SV == 0
-#pentru cele cu date la nivel de circumscrip?ie
+#pe circumscripţie -> CIRC != 0 & SV == 0
+#pentru cele cu date la nivel de circumscripţie
 #clo.abs.circ <- AbsolutCirc(CLO, TRUE)
 #pri.abs.circ <- AbsolutCirc(PRI, TRUE)
-#pentru cele f?r? date la nivel de circumscrip?ie
-#cju.cum.circ <- CumulatCirc(CJU) #cumulare pe baz? de sec?ie de votare
-#pcj.cum.circ <- CumulatCirc(PCJ) #cumulare pe baz? de sec?ie de votare
+#pentru cele fără date la nivel de circumscripţie
+#cju.cum.circ <- CumulatCirc(CJU) #cumulare pe bază de secţie de votare
+#pcj.cum.circ <- CumulatCirc(PCJ) #cumulare pe bază de secţie de votare
 #
-#pe sec?ie de votare - pentru PRI ?i CLO avem date doar pentru Bucure?ti
+#pe secţie de votare - pentru PRI ţi CLO avem date doar pentru Bucureşti
 #pcj.abs.sv <- AbsolutSv(PCJ)
 #cju.abs.sv <- AbsolutSv(CJU)
 #clo.abs.sv.buc <- AbsolutSv(CLO, TRUE)
 #pri.abs.sv.buc <- AbsolutSv(PRI, TRUE)
 #
-#Procente(AbsolutJudet(CJU, TRUE)) #exemplu utilizare func?ie Procente
-#SimpLocale2012(AbsolutSv(CJU)) #exemplu utilizare func?ie SimpLocale2012
-#Procente(SimpLocale2012(AbsolutSv(CJU, TRUE))) #combinare func?ii
+#Procente(AbsolutJudet(CJU, TRUE)) #exemplu utilizare funcţie Procente
+#SimpLocale2012(AbsolutSv(CJU)) #exemplu utilizare funcţie SimpLocale2012
+#Procente(SimpLocale2012(AbsolutSv(CJU, TRUE))) #combinare funcţii
 #
-#Rezultate prim?rii la nivel de circumscrip?ie TUR 1 + TUR 2
+#Rezultate primării la nivel de circumscripţie TUR 1 + TUR 2
 #pri.circ <- Procente(SimpLocale2012(AbsolutCirc(PRI, TRUE)))
 #pri.circ.2 <- TUR2[TUR2$TIPPV == 1,]
 #pri.circ.2 <- Procente(SimpLocale2012(AbsolutCirc(pri.circ.2, 
@@ -57,7 +57,7 @@ rm(locale2012)
 #separate first and second round
 TUR1 <- tururi[[1]]
 TUR2 <- tururi[[2]]
-TUR2$DEN_JUD <- gsub("C?L?RA?I", "CALARA?I", TUR2$DEN_JUD) #unificare spelling
+TUR2$DEN_JUD <- gsub("CĂLĂRAŞI", "CALARAŞI", TUR2$DEN_JUD) #unificare spelling
 rm(tururi)
 #separate first round: local council, county council, mayor and county president
 tipuri <- split(TUR1, TUR1$TIPPV)
@@ -68,7 +68,7 @@ CLO <- tipuri[[3]]
 CJU <- tipuri[[4]]
 rm(tipuri)
 ################################################################################
-#?nc?rcare statistica sectii pre-alegeri
+#încărcare statistica sectii pre-alegeri
 aleg.loc.2012 <- read.csv("2012AlegeriRomania/2012locale/1. statistici/_statistica_alegatori_pe_sectii_de_vot_locale_2012.csv"
                        , sep = ";", stringsAsFactors = FALSE)
 ################################################################################
@@ -77,28 +77,28 @@ colnames(aleg.loc.2012)[4] <- "SV"
 colnames(aleg.loc.2012)[3] <- "DEN_JUD"
 colnames(aleg.loc.2012)[5] <- "Numar.alegatori"
 aleg.loc.2012[,3] <- toupper(aleg.loc.2012[,3])
-aleg.loc.2012$DEN_JUD <- gsub("BAC?U", "BACAU", aleg.loc.2012$DEN_JUD)
-aleg.loc.2012$DEN_JUD <- gsub("BR?ILA", "BRAILA", aleg.loc.2012$DEN_JUD)
-aleg.loc.2012$DEN_JUD <- gsub("BUZ?U", "BUZAU", aleg.loc.2012$DEN_JUD)
-aleg.loc.2012$DEN_JUD <- gsub("C?L?RA?I", "CALARA?I", aleg.loc.2012$DEN_JUD)
-aleg.loc.2012$DEN_JUD <- gsub("S?LAJ", "SALAJ", aleg.loc.2012$DEN_JUD)
-aleg.loc.2012$DEN_JUD <- gsub("D?MBOVI?A", "D?MBOVI?A", aleg.loc.2012$DEN_JUD)
-aleg.loc.2012$DEN_JUD <- gsub("BUCURE?TI", "MUNICIPIUL BUCURE?TI", 
+aleg.loc.2012$DEN_JUD <- gsub("BACĂU", "BACAU", aleg.loc.2012$DEN_JUD)
+aleg.loc.2012$DEN_JUD <- gsub("BRĂILA", "BRAILA", aleg.loc.2012$DEN_JUD)
+aleg.loc.2012$DEN_JUD <- gsub("BUZĂU", "BUZAU", aleg.loc.2012$DEN_JUD)
+aleg.loc.2012$DEN_JUD <- gsub("CĂLĂRAŞI", "CALARAŞI", aleg.loc.2012$DEN_JUD)
+aleg.loc.2012$DEN_JUD <- gsub("SĂLAJ", "SALAJ", aleg.loc.2012$DEN_JUD)
+aleg.loc.2012$DEN_JUD <- gsub("DÎMBOVIŢA", "DÂMBOVIŢA", aleg.loc.2012$DEN_JUD)
+aleg.loc.2012$DEN_JUD <- gsub("BUCUREŞTI", "MUNICIPIUL BUCUREŞTI", 
                               aleg.loc.2012$DEN_JUD)
 aleg.loc.2012$Numar.alegatori <- gsub("\\.","",aleg.loc.2012$Numar.alegatori)
 aleg.loc.2012$Numar.alegatori <- as.numeric(aleg.loc.2012$Numar.alegatori)
 #test <- merge(CJU.test[, c(1:6)], aleg.loc.2012, all.x = TRUE)
 #
 ################################################################################
-#?nc?rcare denumiri sec?ii de votare locale 2012 ?i schimbare ca la referend2012
+#încărcare denumiri secţii de votare locale 2012 şi schimbare ca la referend2012
 nume.sec.loc.2012 <- read.csv("2012AlegeriRomania/2012locale/sv.csv", sep = ";", 
                               stringsAsFactors = FALSE)
 ################################################################################
 # nume.sec.loc.2012$adresa <- toupper(nume.sec.loc.2012$adresa)
-# nume.sec.loc.2012$adresa <- gsub("?", "A", nume.sec.loc.2012$adresa)
-# nume.sec.loc.2012$adresa <- gsub("?", "A", nume.sec.loc.2012$adresa)
-# nume.sec.loc.2012$adresa <- gsub("?", "T", nume.sec.loc.2012$adresa)
-# nume.sec.loc.2012$adresa <- gsub("?", "S", nume.sec.loc.2012$adresa)
+# nume.sec.loc.2012$adresa <- gsub("Â", "A", nume.sec.loc.2012$adresa)
+# nume.sec.loc.2012$adresa <- gsub("Ă", "A", nume.sec.loc.2012$adresa)
+# nume.sec.loc.2012$adresa <- gsub("Ţ", "T", nume.sec.loc.2012$adresa)
+# nume.sec.loc.2012$adresa <- gsub("Ş", "S", nume.sec.loc.2012$adresa)
 # nume.sec.loc.2012$adresa <- gsub (", STR\\. ", " STRADA: ", 
 #                                   nume.sec.loc.2012$adresa)
 # nume.sec.loc.2012$adresa <- gsub (" TELEFON(.*)$", "", nume.sec.loc.2012$adresa)
@@ -128,12 +128,12 @@ new.prim <- merge (new.prim, unique(nume.sec.loc.2012[,c(1:5)]),
                        all.x = TRUE)
 rm(TUR2.prim)
 ################################################################################
-#FUNC?II
+#FUNCŢII
 ################################################################################
 TransformTabel = function (x, indep.agreg = FALSE){
-  #func?ie de transformare ?n tabel
+  #funcţie de transformare în tabel
   work.transf <- x
-  #util dac? reactivez verificarea corectitudinii tabelului
+  #util dacă reactivez verificarea corectitudinii tabelului
   nume_tabel.transf<- deparse(substitute(x))
   ###
   #1. creez baza tabelului cu datele de participare din work.transf$CODU[i] == 0
@@ -145,19 +145,19 @@ TransformTabel = function (x, indep.agreg = FALSE){
                                                        "TAPUCO", "TAPUSU", 
                                                        "TAPUSP", "TVVE", "TVN", 
                                                        "BVP", "BVA", "NR_CONS")]
-  indep <- work.transf[work.transf$CODU == 999,] #tabel separat cu independen?ii
+  indep <- work.transf[work.transf$CODU == 999,] #tabel separat cu independenţii
   ###
-  #2. prelucr?m datele privind voturile date partidelor (VVE)
+  #2. prelucrăm datele privind voturile date partidelor (VVE)
   ###
-  #acum lucr?m doar cu r?ndurile cu CODU != 0 &  CODU != 999
-  #?n plus, p?str?m doar coloanele necesare pentru reshape
+  #acum lucrăm doar cu rândurile cu CODU != 0 &  CODU != 999
+  #în plus, păstrăm doar coloanele necesare pentru reshape
   work.transf <- work.transf[work.transf$CODU != 0 & work.transf$CODU != 999, 
                              c("JUD", "CIRC", "SV", "CODU", "VVE")]
   work.transf <- reshape(work.transf, v.names = "VVE", 
                          idvar = c("JUD", "CIRC", "SV"), timevar = "CODU", 
                          direction = "wide")
-  #acum aranj?m numele coloanelor
-  #facem un dataframe cu echivalen?ele
+  #acum aranjăm numele coloanelor
+  #facem un dataframe cu echivalenţele
   nume.partide <- c("UBBR", "ACDR", "PNDC", "U-Croati", "PRM", "Pro Europa", 
                     "RO.AS.IT", "U-Ucraineni", "FDGR", "Dom Polski", "PP-LC", 
                     "U-Elena", "PPOP", "PSR", "PDL", "MC-L", "PDL-PNTCD", 
@@ -179,7 +179,7 @@ TransformTabel = function (x, indep.agreg = FALSE){
   rep.col <- data.frame(nume = nume.partide, 
                         coduri = coduri.partide, numar = numar.partide, 
                         stringsAsFactors = FALSE)
-  #punem coloanele lips?
+  #punem coloanele lipsă
   for (i in 1:97) {
     colnames(work.transf) <- replace(colnames(work.transf), 
                                      colnames(work.transf) == rep.col$coduri[i], 
@@ -193,10 +193,10 @@ TransformTabel = function (x, indep.agreg = FALSE){
       rm(coloana)
     } 
   }
-  #acum ordon?m dup? codul partidului
-  options(warn = -1) #ca s? nu primesc warning aici
+  #acum ordonăm după codul partidului
+  options(warn = -1) #ca să nu primesc warning aici
   work.transf <- work.transf[,order(as.numeric(colnames(work.transf)))]
-  options(warn = 0) #revenim la setarea anterioar? pentru warn
+  options(warn = 0) #revenim la setarea anterioară pentru warn
   #iar acum punem denumirile partidelor
   for (i in 1:97) {
     colnames(work.transf) <- replace(colnames(work.transf), 
@@ -207,11 +207,11 @@ TransformTabel = function (x, indep.agreg = FALSE){
   tabel.transf <- merge(tabel.transf, work.transf, all.x = TRUE, sort = FALSE)
   rm(work.transf)
   ###
-  #3. acum trebuie s? ad?ug?m una sau mai multe coloane pentru independen?i
+  #3. acum trebuie să adăugăm una sau mai multe coloane pentru independenţi
   ###
-  #avem dou? cazuri, cu sau f?r? agregare independen?i
+  #avem două cazuri, cu sau fără agregare independenţi
   if(indep.agreg == FALSE) {
-    #colnames diferite ?n func?ie de nivel (jude?ean sau local)
+    #colnames diferite în funcţie de nivel (judeţean sau local)
     if((indep$TIPPV[1] == 1) | (indep$TIPPV[1] == 2)) {
       indep.labels <- apply(indep, 1, function(qqq) paste(qqq[5],"_", qqq[2], 
                                                           "_", qqq[4], "+",
@@ -226,29 +226,29 @@ TransformTabel = function (x, indep.agreg = FALSE){
     indep <- indep[, c("JUD", "CIRC", "SV", "VVE", "indep.labels")]
     indep <- reshape(indep, v.names = "VVE", idvar = c("JUD", "CIRC", "SV"), 
                      timevar = "indep.labels", direction = "wide")
-    #elimin?m "VVE." din numele independen?ilor
+    #eliminăm "VVE." din numele independenţilor
     colnames(indep) <- gsub("VVE.", "", colnames(indep))
-    #print?m num?r independen?i, a?a, ca chestie
+    #printăm număr independenţi, aşa, ca chestie
     indep.labels <- unique(indep.labels)
-    print(paste("Avem", length(indep.labels), "independen?i."))
+    print(paste("Avem", length(indep.labels), "independenti."))
   }
   else {
     indep <- aggregate(indep$VVE, by = list(indep$JUD, indep$CIRC, indep$SV), 
                        sum)
     colnames(indep) <- c("JUD", "CIRC", "SV","INDEPENDENTI")
   }
-  #unim tabelul de independen?i la tabelul general
+  #unim tabelul de independenţi la tabelul general
   tabel.transf <- merge(tabel.transf, indep, sort = TRUE, all.x = TRUE)
   rm(indep)
   ###
-  #4. suntem gata, mai trebuie doar s? ?nlocuim NA cu zero ?i s? scoatem col.85
+  #4. suntem gata, mai trebuie doar să înlocuim NA cu zero şi să scoatem col.85
   ###
   tabel.transf[is.na(tabel.transf)] <- 0
-  #numerotarea partidelor sare peste nr. 85 ?i se creeaz? o coloan? goal?
+  #numerotarea partidelor sare peste nr. 85 şi se creează o coloană goală
   tabel.transf$NOLABEL <- NULL 
   tabel.transf <- merge (tabel.transf, unique(nume.sec.loc.2012[,c(1:5)]), 
                          all.x = TRUE)
-  #ordon?m coloanele  
+  #ordonăm coloanele  
   work1 <- tabel.transf[,c("JUD", "CIRC", "SV", "DEN_JUD", "DEN_CIRC", "siruta")]
   work2 <- subset(tabel.transf, select = -c(JUD, CIRC, SV, DEN_JUD, DEN_CIRC, siruta))
   tabel.transf <- cbind(work1, work2)
@@ -258,14 +258,14 @@ TransformTabel = function (x, indep.agreg = FALSE){
 
 
 AbsolutJudet = function (x, indep.agreg = FALSE) {
-  #definirea func?iei care prelucreaz? totalurile la nivel jude?ean, 
-  #acolo unde avem CIRC=0, adic? la CJU ?i PCJ
-  #x e tabelul, indep.agreg ne zice dac? cumul?m independen?ii
+  #definirea funcţiei care prelucrează totalurile la nivel judeţean, 
+  #acolo unde avem CIRC=0, adică la CJU şi PCJ
+  #x e tabelul, indep.agreg ne zice dacă cumulăm independenţii
   work.judet <- x
   nume_tabel<- deparse(substitute(x))
   #separ datele la nivel de judet
   work.judet <- work.judet[work.judet$CIRC == 0,]
-  #apelare func?ie TransformTabel(), cu sau f?r? cumulare independen?i
+  #apelare funcţie TransformTabel(), cu sau fără cumulare independenţi
   if(indep.agreg == FALSE) {
     tabel <- TransformTabel(work.judet)
     nume_fisier <- paste(nume_tabel, "-judet.csv", sep ="")
@@ -279,14 +279,14 @@ AbsolutJudet = function (x, indep.agreg = FALSE) {
 }
 
 AbsolutCirc = function (x, indep.agreg = FALSE) {
-  #definirea func?iei care prelucreaz? totalurile la nivel de circumscrip?ie, 
+  #definirea funcţiei care prelucrează totalurile la nivel de circumscripţie, 
   #CIRC != 0 && SV == 0
-  #x e tabelul, indep.agreg ne zice dac? cumul?m independen?ii
+  #x e tabelul, indep.agreg ne zice dacă cumulăm independenţii
   work.circ <- x
   nume_tabel<- deparse(substitute(x))
-  #separ date circumscrip?ie
+  #separ date circumscripţie
   work.circ <- work.circ[work.circ$CIRC != 0 & work.circ$SV == 0,]
-  #apelare func?ie TransformTabel(), cu sau f?r? cumulare independen?i
+  #apelare funcţie TransformTabel(), cu sau fără cumulare independenţi
   if(indep.agreg == FALSE) {
     tabel <- TransformTabel(work.circ)
     nume_fisier <- paste(nume_tabel, "-circ.csv", sep ="")
@@ -300,14 +300,14 @@ AbsolutCirc = function (x, indep.agreg = FALSE) {
 }
 
 AbsolutSv = function (x, indep.agreg = FALSE) {
-  #definirea func?iei care prelucreaz? totalurile la nivel de sec?ie de votare,
+  #definirea funcţiei care prelucrează totalurile la nivel de secţie de votare,
   #SV != 0
-  #x e tabelul, indep.agreg ne zice dac? cumul?m independen?ii
+  #x e tabelul, indep.agreg ne zice dacă cumulăm independenţii
   work.sv <- x
   nume_tabel<- deparse(substitute(x))
-  #separ datele la nivel de sec?ie
+  #separ datele la nivel de secţie
   work.sv <- work.sv[work.sv$SV != 0,]
-  #apelare func?ie TransformTabel(), cu sau f?r? cumulare independen?i
+  #apelare funcţie TransformTabel(), cu sau fără cumulare independenţi
   if(indep.agreg == FALSE) {
     tabel <- TransformTabel(work.sv)
     nume_fisier <- paste(nume_tabel, "-sv.csv", sep ="")
@@ -321,15 +321,15 @@ AbsolutSv = function (x, indep.agreg = FALSE) {
 }
 
 CumulatJudet = function (x){
-  #definirea func?ie de stabilire a rezultatelor cumulate pe jude? acolo unde
-  #nu avem ?nregistr?ri CIRC = 0, respectiv doar CLO ?i PRI
-  #ob?inem mai ?nt?i datele pe circumscrip?ie; cumul?m independen?ii
+  #definirea funcţiei de stabilire a rezultatelor cumulate pe judeţ acolo unde
+  #nu avem înregistrări CIRC = 0, respectiv doar CLO şi PRI
+  #obţinem mai întâi datele pe circumscripţie; cumulăm independenţii
   work <- AbsolutCirc(x, TRUE)
   nume_tabel<- deparse(substitute(x))
-  #folosim func?ia de agregare
+  #folosim funcţia de agregare
   work <- aggregate(subset(work, select = -c(JUD, DEN_JUD, DEN_CIRC, siruta)), 
                     by = list(work$JUD), sum)
-  #dup? agregare mai sunt probleme cu unele coloane
+  #după agregare mai sunt probleme cu unele coloane
   work$CIRC <- 0
   work$NR_CONS <- 0
   colnames(work)[1] <- "JUD"
@@ -354,26 +354,26 @@ CumulatJudet = function (x){
 }
 
 CumulatCirc = function (x){
-  #definirea func?ie de stabilire a rezultatelor cumulate pe circumscrip?ie 
-  #acolo unde nu avem ?nregistr?ri CIRC != 0 & work.circ$SV == 0,
-  #respectiv doar CJU ?i PCJ
-  #ob?inem mai ?nt?i datele pe sec?ie de votare; cumul?m independen?ii
+  #definirea funcţiei de stabilire a rezultatelor cumulate pe circumscripţie 
+  #acolo unde nu avem înregistrări CIRC != 0 & work.circ$SV == 0,
+  #respectiv doar CJU şi PCJ
+  #obţinem mai întâi datele pe secţie de votare; cumulăm independenţii
   cum.sv <- AbsolutSv(x, TRUE)
   nume_tabel<- deparse(substitute(x))
-  #folosim func?ia de agregare
+  #folosim funcţia de agregare
   work <- aggregate(subset(cum.sv, select = -c(JUD, CIRC, DEN_JUD, DEN_CIRC, 
                                                siruta)), 
                     by = list(cum.sv$JUD, cum.sv$CIRC), sum)
-  #dup? agregare mai sunt probleme cu unele coloane
+  #după agregare mai sunt probleme cu unele coloane
   work$SV <- 0
   colnames(work)[1] <- "JUD"
   colnames(work)[2] <- "CIRC"
-  #facem merge ca s? reintroducem DEN_JUD ?i DEN_CIRC
+  #facem merge ca să reintroducem DEN_JUD şi DEN_CIRC
   cum.sv <- cum.sv[,c("JUD", "CIRC", "DEN_JUD", "DEN_CIRC", "siruta")]
   cum.sv <- unique(cum.sv)
   work <- merge (work, cum.sv)
   rm(cum.sv)
-  #ordon?m coloanele  
+  #ordonăm coloanele  
   work1 <- work[,c("JUD", "CIRC", "SV", "DEN_JUD", "DEN_CIRC", "siruta")]
   work2 <- subset(work, select = -c(JUD, CIRC, SV, DEN_JUD, DEN_CIRC, siruta))
   work <- cbind(work1, work2)
@@ -384,7 +384,7 @@ CumulatCirc = function (x){
   work
 }
 
-#definirea func?iei de trecere la procentaje
+#definirea funcţiei de trecere la procentaje
 Procente = function (x){
   work <- x[,c("JUD", "CIRC", "SV", "DEN_JUD", "DEN_CIRC", "siruta", "TAP")]
   work$TAPU_P <- x$TAPU / x$TAP #participare la vot / lista perm.
@@ -393,7 +393,7 @@ Procente = function (x){
   work$TAPUP_P <- x$TAPUP / x$TAP #participare aleg. permanenti /lista perm.
   work$TAPUCO_P <- x$TAPUCO / x$TAP #participare aleg. UE /lista perm.
   work$TAPUSU_P <- x$TAPUSU / x$TAP #participare aleg. suplimentari /lista perm.
-  work$TAPUSP_P <- x$TAPUSP / x$TAP #participare aleg. urn? spec. /lista perm.
+  work$TAPUSP_P <- x$TAPUSP / x$TAP #participare aleg. urnă spec. /lista perm.
   partide  <- x[-c(1:21)]
   partide <- partide / x$TVVE
   work <- cbind(work, partide)
@@ -401,10 +401,10 @@ Procente = function (x){
 }
 
 SimpLocale2012 = function (x){
-  #definirea func?iei de simplificare pentru locale2012
-  #cumulare PDL cu alian?ele ?n care a participat ?i PDL
-  #cumulare USL, PNL, PSD, PC ?i alian?ele aferente
-  #cumulare minorit??i, altele dec?t maghiar?
+  #definirea funcţiei de simplificare pentru locale2012
+  #cumulare PDL cu alianţele în care a participat şi PDL
+  #cumulare USL, PNL, PSD, PC şi alianţele aferente
+  #cumulare minoritîţi, altele decât maghiară
   work <- x
   work$MINORITATI <- x$UBBR + x$'U-Croati' + x$RO.AS.IT + x$'U-Ucraineni'
   + x$FDGR + x$'Dom Polski' + x$'U-Elena' + x$U.C.R.R. + x$UDSCR +x$A.M.R.

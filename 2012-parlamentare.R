@@ -2,7 +2,7 @@
 #PRELUCRARE REZULTATE PARLAMENTARE 2012 DE LA BEC
 ######################################################
 
-#Atenþie! Aici ºterg tot ce e în memoria R.
+#AtenÅ£ie! Aici ÅŸterg tot ce e Ã®n memoria R.
 #rm(list = ls(all = TRUE))
 nume.sec.parl.2012 <- read.csv("2012AlegeriRomania/2012parlamentare/sv_bec.csv", sep = ";", 
                                stringsAsFactors = FALSE)
@@ -19,14 +19,14 @@ cdep <- camere[[1]]
 sen <- camere[[2]]
 rm(parlamentare2012, camere)
 
-#În continuare definesc câteva funcþii pentru prelucrare
-#În principal, fac un reshape de la format long la wide
+#Ã®n continuare definesc cÃ¢teva funcÅ£ii pentru prelucrare
+#Ã®n principal, fac un reshape de la format long la wide
 TransformTabelParl = function (x, indep.agreg = FALSE){
-  #funcþie de transformare a datelor de la BEC în tabel de tip "wide"
+  #funcÅ£ie de transformare a datelor de la BEC Ã®n tabel de tip "wide"
   #1. creez baza tabelului cu datele de participare
   tabel.transf <- x[1:19]
   tabel.transf <- unique(tabel.transf)
-  #2. fac tabel separat cu independenþii
+  #2. fac tabel separat cu independenÅ£ii
   work.indep <- x[x$numeCompetitor == "NULL",] 
   #3. fac tabel cu datele privind voturile partidelor (doar coloanele necesare)
   work.partide <- x[x$numeCompetitor != "NULL", 
@@ -38,10 +38,10 @@ TransformTabelParl = function (x, indep.agreg = FALSE){
   #4. unesc tabel cu date  participare cu tabel cu voturi partide
   tabel.transf <- merge(tabel.transf, work.partide, all.x = TRUE, sort = FALSE)
   rm(work.partide)
-  #5. acum trebuie sã adãugãm una sau mai multe coloane pentru independenþi
-  #avem douã cazuri, cu sau fãrã agregare independenþi
+  #5. acum trebuie sÄƒ adÄƒugÄƒm una sau mai multe coloane pentru independenÅ£i
+  #avem douÄƒ cazuri, cu sau fÄƒrÄƒ agregare independenÅ£i
   if(indep.agreg == FALSE) {
-    #numele coloanelor de independenþi: DEN_JUD + COLEGIU + NUME_CANDIDAT
+    #numele coloanelor de independenÅ£i: DEN_JUD + COLEGIU + NUME_CANDIDAT
     indep.labels <- apply(work.indep, 1, function(qqq) paste(qqq[2],"_", qqq[5], 
                                                              "_", qqq[20], 
                                                              sep = ""))  
@@ -50,25 +50,25 @@ TransformTabelParl = function (x, indep.agreg = FALSE){
     work.indep <- reshape(work.indep, v.names = "VoturiCandidat", 
                           idvar = c("JUD", "SV"), timevar = "indep.labels", 
                           direction = "wide")
-    #printãm numãr independenþi, aºa, de verificare
+    #printÄƒm numÄƒr independenÅ£i, aÅŸa, de verificare
     indep.labels <- unique(indep.labels)
-    print(paste("Avem", length(indep.labels), "independenþi."))
+    print(paste("Avem", length(indep.labels), "independenti."))
   }
   else {
-    #dacã vrem sã agregãm independenþii
+    #dacÄƒ vrem sÄƒ agregÄƒm independenÅ£ii
     work.indep <- aggregate(work.indep$VoturiCandidat, 
                             by = list(work.indep$JUD, work.indep$SV), sum)
     colnames(work.indep) <- c("JUD", "SV","INDEPENDENTI")
   }
-  #unim tabelul de independenþi la tabelul general
+  #unim tabelul de independenÅ£i la tabelul general
   tabel.transf <- merge(tabel.transf, work.indep, sort = TRUE, all.x = TRUE)
   rm(work.indep)
   #6. finalizare
-  #eliminãm "VoturiCandidat." din numele coloanelor
+  #eliminÄƒm "VoturiCandidat." din numele coloanelor
   colnames(tabel.transf) <- gsub("VoturiCandidat.", "", colnames(tabel.transf))
-  #înlocuim NA cu zero
+  #Ã®nlocuim NA cu zero
   tabel.transf[is.na(tabel.transf)] <- 0
-  #adãugãm adresa secþiei
+  #adÄƒugÄƒm adresa secÅ£iei
   tabel.transf <- merge (tabel.transf, nume.sec.parl.2012[,c(2, 5, 8)], 
                          all.x = TRUE)
   tabel.transf
@@ -105,8 +105,8 @@ CumulatJudet = function(x){
   judet
 }
 
-#Producerea datelor pentru fiecare nivel (secþie, localitate, colegiu, judeþ)
-#date pe secþie de votare
+#Producerea datelor pentru fiecare nivel (secÅ£ie, localitate, colegiu, judeÅ£)
+#date pe secÅ£ie de votare
 sen.sv <- TransformTabelParl(sen)
 cdep.sv <-TransformTabelParl(cdep)
 #date pe localitate
@@ -115,20 +115,20 @@ cdep.circ <- CumulatCirc(cdep.sv)
 #date pe colegiu
 sen.colegiu <- CumulatColegiu(sen.sv)
 cdep.colegiu <- CumulatColegiu(cdep.sv)
-#date pe judeþ
+#date pe judeÅ£
 sen.judet <- CumulatJudet(sen.sv)
 cdep.judet <- CumulatJudet(cdep.sv)
 
 ######################################################
 #IMPORT SECTII DE VOTARE PARLAMENTARE 2012 DE LA ROAEP
 ######################################################
-library(xlsReadWrite) #Este necesarã utilizarea pachetului xlsReadWrite
+library(xlsReadWrite) #Este necesarÄƒ utilizarea pachetului xlsReadWrite
 #Sursa datelor: http://www.roaep.ro/ro/section.php?id=25&l2=48&ids=121&an=2012
-#(descãrcate la 27.12.2012)
-lista <- list.files("2012AlegeriRomania\\2012parlamentare\\SV_ROAEP\\judete") #A se schimba dupã caz
+#(descÄƒrcate la 27.12.2012)
+lista <- list.files("2012AlegeriRomania\\2012parlamentare\\SV_ROAEP\\judete") #A se schimba dupÄƒ caz
 judete <- list()
-#Fiºierele ROAEP sunt în general similare, dar mai apar diferenþe în privinþa
-#sheet-ului pe care sunt datele (sheet.ales) ºi a rândului de la care încep
+#FiÅŸierele ROAEP sunt Ã®n general similare, dar mai apar diferenÅ£e Ã®n privinÅ£a
+#sheet-ului pe care sunt datele (sheet.ales) ÅŸi a rÃ¢ndului de la care Ã®ncep
 #datele propriu-zise (rand.initial)
 for (i in lista){
   rand.initial <- 5
@@ -154,7 +154,7 @@ for (i in lista){
   judete[[i]] <- read.xls(nume, sheet = sheet.ales, from = rand.initial, 
                           stringsAsFactors = FALSE, colClasses = "character")
   if (i != "ct_parlam_2012_final.xls" & i != "vs_parlam2012_v3.xls"){
-    judete[[i]] <- judete[[i]][-1,]} #mai scoatem un rând în plus
+    judete[[i]] <- judete[[i]][-1,]} #mai scoatem un rÃ¢nd Ã®n plus
   
   colnames(judete[[i]])[1:17] <- c("JUD", "ColCD", "ColSE", "SV", "tipUAT", 
                                    "DEN_CIRC", "SirutaUAT", "tipComp", 
@@ -163,10 +163,10 @@ for (i in lista){
                                    "FosteDenArtera", "Obs")
 }
 
-#Pregãtim 3 judeþe pentru loop-ul urmãtor
-#Au pus un rând pentru fiecare Siruta, chiar dacã aveau aceeaºi secþie de votare
-#Aºa cã pun "" la valoarea secþiei, pentru a ºterge rândurile la loop-ul
-#urmãtor
+#PregÄƒtim 3 judeÅ£e pentru loop-ul urmÄƒtor
+#Au pus un rÃ¢nd pentru fiecare Siruta, chiar dacÄƒ aveau aceeaÅŸi secÅ£ie de votare
+#AÅŸa cÄƒ pun "" la valoarea secÅ£iei, pentru a ÅŸterge rÃ¢ndurile la loop-ul
+#urmÄƒtor
 for (k in c(13, 27, 38)){
   for (i in (nrow(judete[[k]])-1):1){
     if (judete[[k]][i+1,4] ==judete[[k]][i,4]){
@@ -175,20 +175,20 @@ for (k in c(13, 27, 38)){
   }
 }
 
-#Aici scot: (a) rândurile goale de la final;
-# (b) alte rânduri goale care apar atunci când în Excel au fãcut mai multe
-#rânduri pentru aceeaºi secþie, câte un rând pe cod Siruta; în situaþia asta,
-#au completat cu nr. secþiei doar primul rând; am considerat cã acest prim
-#rând indicã localizarea realã a secþiei; a se vedea, de exemplu, secþia 328
-#din judeþul Bacãu;
-#(c) rândurile marcate la loop-ul de mai sus.
+#Aici scot: (a) rÃ¢ndurile goale de la final;
+# (b) alte rÃ¢nduri goale care apar atunci cÃ¢nd Ã®n Excel au fÄƒcut mai multe
+#rÃ¢nduri pentru aceeaÅŸi secÅ£ie, cÃ¢te un rÃ¢nd pe cod Siruta; Ã®n situaÅ£ia asta,
+#au completat cu nr. secÅ£iei doar primul rÃ¢nd; am considerat cÄƒ acest prim
+#rÃ¢nd indicÄƒ localizarea realÄƒ a secÅ£iei; a se vedea, de exemplu, secÅ£ia 328
+#din judeÅ£ul BacÄƒu;
+#(c) rÃ¢ndurile marcate la loop-ul de mai sus.
 for (i in 1:42){
   judete[[i]] <- judete[[i]][judete[[i]]$SV != "",]}
 
 #Corecturi manuale ale codurilor Siruta de la ROAEP pe baza Siruta2008
-#Acolo unde erau mai multe coduri, l-am ales pe cel în care era efectiv secþia
-#Acolo unde localitatea nu are cod Siruta am pus codul localitãþii principale
-#Unele modificãri se puteau automatiza, dar am subestimat numãrul lor.
+#Acolo unde erau mai multe coduri, l-am ales pe cel Ã®n care era efectiv secÅ£ia
+#Acolo unde localitatea nu are cod Siruta am pus codul localitÄƒÅ£ii principale
+#Unele modificÄƒri se puteau automatiza, dar am subestimat numÄƒrul lor.
 judete[[1]][123,10] <- 146
 judete[[2]][333,10] <- 1651
 judete[[3]][1, 10] <- 927
@@ -327,8 +327,8 @@ judete[[23]][287, 10] <- 8638
 judete[[23]][138, 10] <- 8320
 judete[[23]][143, 10] <- 8329
 judete[[23]][169, 10] <- 8476
-judete[[25]][100,10]<- 10093 #Frumuºica, Axintele, Ialomiþa fãrã Siruta?
-judete[[25]][128,10]<- 9316 #Ghimpaþi, Ciulniþa, Ialomiþa fãrã Siruta?
+judete[[25]][100,10]<- 10093 #FrumuÅŸica din Axintele, IalomiÅ£a fÄƒrÄƒ Siruta?
+judete[[25]][128,10]<- 9316 #GhimpaÅ£i din CiulniÅ£a, IalomiÅ£a fÄƒrÄƒ Siruta?
 judete[[26]][1,10] <- 9507
 judete[[26]][237,10] <- 9540
 judete[[26]][282,10] <- 9548
@@ -353,8 +353,8 @@ judete[[26]][687,10] <- 10010
 judete[[26]][385, 10] <- 9667
 judete[[26]][386, 10] <- 9669
 judete[[26]][413:414, 10] <- 9701
-#Aici am pus codul pentru satul Bârnova, com. Bârnova din siruta2008
-judete[[26]][436, 10] <- 9509 #com. Grajduri, sat Bârnova, spital Bârnova??
+#Aici am pus codul pentru satul BÃ¢rnova, com. BÃ¢rnova din siruta2008
+judete[[26]][436, 10] <- 9509 #com. Grajduri, sat BÃ¢rnova, spital BÃ¢rnova??
 #
 judete[[26]][491:494, 10] <- c(9773, 9774 , 9775, 9776)
 judete[[26]][531, 10] <- 9831
@@ -362,7 +362,7 @@ judete[[26]][573, 10] <- 9878
 judete[[26]][688, 10] <- 10011
 judete[[26]][689, 10] <- 10012
 judete[[26]][293, 10] <- 9567
-judete[[27]][179,10] <- 11187 #Grãdiniþa P.F. II, Gogoºu, MH fãrã Siruta
+judete[[27]][179,10] <- 11187 #GrÄƒdiniÅ£a P.F. II, GogoÅŸu, MH fÄƒrÄƒ Siruta
 judete[[28]][274, 10] <- 10882
 judete[[28]][353, 10] <- 10642
 judete[[28]][354, 10] <- 10643
@@ -380,7 +380,7 @@ judete[[32]][285, 10] <- 13190
 judete[[32]][379, 10] <- 13272
 judete[[32]][489, 10] <- 13085
 judete[[32]][550, 10] <- 13532
-judete[[32]][551, 10] <- 13532 #Gîrbeasca, Starchiojd, PH fãrã cod Siruta
+judete[[32]][551, 10] <- 13532 #GÃ¢rbeasca, Starchiojd, PH fÄƒrÄƒ cod Siruta
 judete[[32]][557, 10] <- 13549
 judete[[32]][574,10] <- 13090
 judete[[32]][575,10] <- 13090
@@ -427,10 +427,10 @@ judete[[40]][88, 10] <- 16799
 judete[[40]][109, 10] <- 16838
 judete[[40]][117, 10] <- 16846
 judete[[40]][129, 10] <- 16780
-judete[[40]][135, 10] <- 16796 #Seaca, Cãlimãneºti
+judete[[40]][135, 10] <- 16796 #Seaca, CÄƒlimÄƒneÅŸti
 judete[[40]][136, 10] <- 16791
 judete[[40]][144, 10] <- 16805
-judete[[40]][152, 10] <- 16817 #am pus Siruta pentru Gura Suhaºului, Ocnele Mari
+judete[[40]][152, 10] <- 16817 #am pus Siruta pentru Gura SuhaÅŸului, Ocnele Mari
 judete[[40]][153, 10] <- 16819
 judete[[40]][392, 10] <- 17380
 judete[[40]][393, 10] <- 17380
@@ -450,9 +450,9 @@ judete[[41]][129, 10] <- 17566
 judete[[41]][151, 10] <- 17597
 judete[[41]][229, 10] <- 17711
 judete[[41]][230, 10] <- 17716
-judete[[41]][234, 10] <- 17724 #Surlea, Pãuneºti nu are cod Siruta
-judete[[41]][235, 10] <- 17724 #Novãceºti, Pãuneºti nu are cod Siruta
-judete[[41]][236, 10] <- 17724 #Bostãneºti, Pãuneºti nu are cod Siruta
+judete[[41]][234, 10] <- 17724 #Surlea, PÄƒuneÅŸti nu are cod Siruta
+judete[[41]][235, 10] <- 17724 #NovÄƒceÅŸti, PÄƒuneÅŸti nu are cod Siruta
+judete[[41]][236, 10] <- 17724 #BostÄƒneÅŸti, PÄƒuneÅŸti nu are cod Siruta
 judete[[41]][106, 10] <- 17523
 judete[[41]][107, 10] <- 17527
 judete[[41]][116, 10] <- 17544
@@ -522,12 +522,12 @@ judete[[42]][487, 10] <- 16696
 judete[[42]][489, 10] <- 16693
 judete[[42]][491, 10] <- 16699
 judete[[42]][504, 10] <- 16716
-judete[[4]][10] <- 17913 #pentru Bucureºti
+judete[[4]][10] <- 17913 #pentru BucureÅŸti
 
-#În unele judeþe au fost completate codurile Siruta doar la prima înregistrare
-#cu localitatea respectivã. Pentru urmãtoarele rãmase goale am folosit loop-ul
-# acesta. În altele nu erau deloc ºi am completat pentru prima înregistrare 
-#(în pasul de mai sus) ºi pe urmã la fel. 
+#Ã®n unele judeÅ£e au fost completate codurile Siruta doar la prima Ã®nregistrare
+#cu localitatea respectivÄƒ. Pentru urmÄƒtoarele rÄƒmase goale am folosit loop-ul
+# acesta. ÃŽn altele nu erau deloc ÅŸi am completat pentru prima Ã®nregistrare 
+#(Ã®n pasul de mai sus) ÅŸi pe urmÄƒ la fel. 
 for (k in 1:42){
   for (i in 2:nrow(judete[[k]])){
     if (judete[[k]][i,10] == ""){
@@ -536,8 +536,8 @@ for (k in 1:42){
     }
   }
 }
-# La unele judeþe nu este trecut codul judeþului în toate înregistrãrile (sau 
-#e greºit la unele înregistrãri).
+# La unele judeÅ£e nu este trecut codul judeÅ£ului Ã®n toate Ã®nregistrÄƒrile (sau 
+#e greÅŸit la unele Ã®nregistrÄƒri).
 judete[[1]][1] <- 1
 judete[[2]][1] <- 3
 judete[[5]][1] <- 4
@@ -553,12 +553,12 @@ judete[[33]][1] <- 34
 judete[[38]][1] <- 37
 judete[[42]][1] <- 39
 
-#Rânduri dublate ºi alte rânduri în plus
+#RÃ¢nduri dublate ÅŸi alte rÃ¢nduri Ã®n plus
 judete[[4]] <- judete[[4]][-c(179, 180, 223, 224),]
 judete[[10]] <- judete[[10]][-447,]
 
 #Alte corecturi
-judete[[5]][605,4] <- 605 #numãr greºit SV
+judete[[5]][605,4] <- 605 #numÄƒr greÅŸit SV
 
 
 #o verificare
@@ -570,15 +570,15 @@ judete[[5]][605,4] <- 605 #numãr greºit SV
 #}
 
 
-#Mai sunt unele judeþe unde au folosit (ºi) codul Siruta lung; scurtãm dupã caz
-#Se poate folosi substr() în locul strtrim()
+#Mai sunt unele judeÅ£e unde au folosit (ÅŸi) codul Siruta lung; scurtÄƒm dupÄƒ caz
+#Se poate folosi substr() Ã®n locul strtrim()
 for (i in c(4, 29, 30, 32, 36, 41)){
   judete[[i]][10] <- sapply(judete[[i]][10], function(qqq) strtrim(qqq,5))
 }
 for (i in c(15, 22)){
 judete[[i]][10] <- sapply(judete[[i]][10], function(qqq) strtrim(qqq,4))
 }
-#pentru judeþul 17, alea cu 6 scad de la 5 la 4 cifre, alea cu 1 de la 6 la 5
+#pentru judeÅ£ul 17, alea cu 6 scad de la 5 la 4 cifre, alea cu 1 de la 6 la 5
 judete[[17]][10] <- sapply(judete[[17]][10], function(qqq) strtrim(qqq,5))
 for (i in 1:nrow(judete[[17]][10])){
   if (strtrim(judete[[17]][i, 10], 1) == "6"){
@@ -598,28 +598,28 @@ romania <- judete[[1]][c("JUD", "SV", "SirutaComp")]
 for (i in 2:42){
   romania <- rbind(romania, judete[[i]][c("JUD", "SV", "SirutaComp")])
 }
-#Facem un JOIN între cdep.sv/sen.sv ºi judete pentru codul Siruta
+#Facem un JOIN Ã®ntre cdep.sv/sen.sv ÅŸi judete pentru codul Siruta
 cdep.sv <- merge(cdep.sv, romania, all.x = TRUE)
 sen.sv <- merge(sen.sv, romania, all.x = TRUE)
 
 ##################
 #Import Siruta2008
 ##################
-#Fiºierul este de la http://earth.unibuc.ro/download/romania-seturi-vectoriale
+#FiÅŸierul este de la http://earth.unibuc.ro/download/romania-seturi-vectoriale
 siruta2008 <- read.csv("2012AlegeriRomania/siruta2008/localitati2008_iso8859_2.csv", sep = ",", 
                       stringsAsFactors = FALSE)
-#Scurtãm codul Siruta, pentru a corespunde formatului de la ROAEP
+#ScurtÄƒm codul Siruta, pentru a corespunde formatului de la ROAEP
 siruta2008[4] <- sapply(siruta2008[4], function(qqq) strtrim(qqq,nchar(qqq)-1))
 
 #######################################################################
-#Facem JOIN-ul final între cdep.sv/sen.sv ºi siruta2008 pentru lat/long
+#Facem JOIN-ul final Ã®ntre cdep.sv/sen.sv ÅŸi siruta2008 pentru lat/long
 #######################################################################
-colnames(siruta2008)[4] <- "SirutaComp" #pregãtire nume coloanã pentru merge
+colnames(siruta2008)[4] <- "SirutaComp" #pregÄƒtire nume coloanÄƒ pentru merge
 cdep.sv <- merge(cdep.sv, siruta2008[c("X", "Y", "SirutaComp")], all.x = TRUE, 
                  sort = FALSE)
 sen.sv <- merge(sen.sv, siruta2008[c("X", "Y", "SirutaComp")], all.x = TRUE, 
                  sort = FALSE)
-#Verificãri
+#VerificÄƒri
 #print(table(cdep.sv[is.na(cdep.sv$X) & cdep.sv$JUD != 42 & 
 #                      cdep.sv$JUD != 43,]["DEN_JUD"]))
 #print(table(sen.sv[is.na(sen.sv$X) & cdep.sv$JUD != 42 & 
@@ -635,28 +635,28 @@ sen.sv <- merge(sen.sv, siruta2008[c("X", "Y", "SirutaComp")], all.x = TRUE,
 #for(judet in unique(cdep.sv$DEN_JUD[cdep.sv$DEN_JUD != "Strainatate (CE. 43)"])){
 #  attach(cdep.sv[cdep.sv$DEN_JUD == judet,])
 #  symbols(X, Y, circles=sqrt(NrAlegatoriPrezentatiLaUrne)/2000, inches=FALSE,
-#          main=paste("Judeþul", judet), 
+#          main=paste("JudeÅ£ul", judet), 
 #          xlab="", ylab="", bg = rgb(0,0,0,0.2), col = rgb(0,0,0,0.2))
 #  text(X, Y, labels = SV, cex = 0.7)
 #    detach()
 #}
 #dev.off()
 
-#ªtergem variabile temporare
+#ÅŸtergem variabile temporare
 rm(romania, judete, i, k, lista, nume, rand.initial, sheet.ales)
 
 ###########
 #EXPORT CSV
 ###########
-#La nivel de secþie de votare, cu cod SIRUTA ºi lat/long
+#La nivel de secÅ£ie de votare, cu cod SIRUTA ÅŸi lat/long
 #write.table(x=cdep.sv, file="2012AlegeriRomania/CSV/2012cdepsv.csv", row.names = FALSE)
 #write.table(x=sen.sv, file="2012AlegeriRomania/CSV/2012sensv.csv", row.names = FALSE)
-#La nivel de oraº/comunã
+#La nivel de oraÅŸ/comunÄƒ
 #write.table(x=cdep.circ, file="2012AlegeriRomania/CSV/2012cdepcirc.csv", row.names = FALSE)
 #write.table(x=sen.circ, file="2012AlegeriRomania/CSV/2012sencirc.csv", row.names = FALSE)
 #La nivel de colegiu
 #write.table(x=cdep.colegiu, file="2012AlegeriRomania/CSV/2012cdepcolegiu.csv", row.names = FALSE)
 #write.table(x=sen.colegiu, file="2012AlegeriRomania/CSV/2012sencolegiu.csv", row.names = FALSE)
-#La nivel de judeþ
+#La nivel de judeÅ£
 #write.table(x=cdep.judet, file="2012AlegeriRomania/CSV/2012cdepjudet.csv", row.names = FALSE)
 #write.table(x=sen.judet, file="2012AlegeriRomania/CSV/2012senjudet.csv", row.names = FALSE)

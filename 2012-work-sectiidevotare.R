@@ -162,7 +162,7 @@ for(s in unique(a.par$siruta)){ #pt fiecare localitate facem câteva teste
         # şi găsesc înregistrarea unică cu nr. de secţie corespunzător
         if(length(adresa.gasita) > 0 & length(unique(adresa.gasita)) == 1){
           print(paste("am trecut de IF-ul 1 cu length(unique) == 1 şi valoarea e",length(unique(adresa.gasita))))
-          numar.curenta <- baza[baza$siruta == s,][n,5] #numar sec?ie parl
+          numar.curenta <- baza[baza$siruta == s,][n,5] #numar secţie parl
           #Următorul IF verifică dacă numărul secţiei de la parlamentare se
           #regăseşte în vectorul de secţii găsite acum pentru referendum
           #De exemplu, dacă secţia la parlamentare e 366, iar vectorul de la
@@ -210,7 +210,7 @@ for(s in unique(a.par$siruta)){ #pt fiecare localitate facem câteva teste
         # şi găsesc înregistrarea unică cu nr. de secţie corespunzător
         if(length(adresa.gasita) > 0 & length(unique(adresa.gasita)) == 1){
           print(paste("am trecut de IF-ul 2 cu length(unique) == 1 şi valoarea e",length(unique(adresa.gasita))))
-          numar.curenta <- baza[baza$siruta == s,][n,5] #numar sec?ie parl
+          numar.curenta <- baza[baza$siruta == s,][n,5] #numar secţie parl
           #Următorul IF verifică dacă numărul secţiei de la parlamentare se
           #regăseşte în vectorul de secţii găsite acum pentru referendum
           #De exemplu, dacă secţia la parlamentare e 366, iar vectorul de la
@@ -274,9 +274,9 @@ for(s in unique(a.par$siruta)){ #pt fiecare localitate facem câteva teste
             if(abs(numarref / numarpar - 1) < procent){
               #Putem introduce modificările. Adresa
               temporar[z, 2] <- unique(adresa.gasita)
-              #Num?rul sec?iei
+              #Numărul secţiei
               temporar[z, 1] <- a.ref.work[a.ref.work$siruta == s & a.ref.work$adresa.ref == unique(adresa.gasita),][z, 6]
-              #Num?rul de aleg?tori 
+              #Numărul de alegători 
               temporar[z, 3] <- numarref
               }
           }
@@ -295,7 +295,7 @@ for(s in unique(a.par$siruta)){ #pt fiecare localitate facem câteva teste
     #condiţiile de mai jos testează că nu avem deja puse datele de la referendum
     #şi că adresa nu e nulă (că-mi dă eroare)
     if(is.na(baza[baza$siruta == s,][n, 11]) & nchar(baza[baza$siruta == s,][n,8]) !=0){
-      #Mai întâi caut secţii cu nume asem?n?tor
+      #Mai întâi caut secţii cu nume asemănător
       adresa.curenta <- baza[baza$siruta == s,][n,8] #adresa secţiei curente
       adresa.gasita <- agrep(adresa.curenta, a.ref.work[a.ref.work$siruta == s,7], 
                              value = TRUE, max.distance = 0.2)
@@ -317,15 +317,15 @@ for(s in unique(a.par$siruta)){ #pt fiecare localitate facem câteva teste
           temporar <- as.data.frame(matrix(rep(NA, 3*sectiipar),sectiipar))
           for(z in 1:sectiipar){
             #testăm fiecare pereche de secţii parlamentar-referendum în
-            #privinţa num?rului de alegători
+            #privinţa numărului de alegători
             numarpar <- baza[baza$siruta == s & baza$adresa.par == adresa.curenta & is.na(baza$SV.ref.echiv),][z, 10]
             numarref <- a.ref.work[a.ref.work$siruta == s & a.ref.work$adresa.ref == unique(adresa.gasita),][z, 9]
             if(abs(numarref / numarpar - 1) < procent){
               #Putem introduce modificările. Adresa
               temporar[z, 2] <- unique(adresa.gasita)
-              #Num?rul sec?iei
+              #Numărul secţiei
               temporar[z, 1] <- a.ref.work[a.ref.work$siruta == s & a.ref.work$adresa.ref == unique(adresa.gasita),][z, 6]
-              #Num?rul de aleg?tori 
+              #Numărul de alegători 
               temporar[z, 3] <- numarref
               }
           }
@@ -343,11 +343,11 @@ for(s in unique(a.par$siruta)){ #pt fiecare localitate facem câteva teste
 timp2 <- Sys.time()
 print(timp2 - timp1)
 
-#au mai r?mas unele sec?ii decalate...!
-#eventual separ ora?ele mari ?i pe cuvinte cheie gen ?coal? gr?dini?? etc
-#eventual s? scot chestiile ?ntre egaluri (adic? ghilimele)?
+#au mai rămas unele secţii decalate...!
+#eventual separ oraşele mari şi pe cuvinte cheie gen şcoală grădiniţă etc
+#eventual să scot chestiile între egaluri (adică ghilimele)?
 
-#ceva analiz? distribu?ie sec?ii g?site pe siruta dup? 4 for-uri
+#ceva analiză distribuţie secţii găsite pe siruta după 4 for-uri
 numar.sectii <- table(baza$siruta)
 numar.sectii <- as.data.frame(numar.sectii)
 gasite <- !is.na(baza$SV.ref.echiv)
@@ -361,38 +361,38 @@ statistica.sectii <- merge(numar.sectii, agregare)
 rm(numar.sectii, agregare, gasite)
 statistica.sectii$procentaj <- statistica.sectii$sectii.gasite/statistica.sectii$sectii.existente
 statistica.sectii$sectii.negasite <- statistica.sectii$sectii.existente - statistica.sectii$sectii.gasite
-#rezultate proaste avem, ?n mod previzibil, ?n localit??ile cu multe sec?ii
-# #dar sunt ?i sec?ii mici f?r? rezultate bune
+#rezultate proaste avem, în mod previzibil, în localităţile cu multe secţii
+# #dar sunt şi secţii mici fără rezultate bune
 # plot(statistica.sectii$sectii.existente, statistica.sectii$procentaj)
 # plot(log10(statistica.sectii$sectii.existente)+1, statistica.sectii$procentaj)
-# #Alea unde a g?sit una din dou?!
+# #Alea unde a găsit una din două!
 # View(statistica.sectii[statistica.sectii$sectii.existente == 2 & statistica.sectii$procentaj == 0.5,])
-# #Distribu?ia localit??ilor dup? nr. de sec?ii (log10)
+# #Distribuţia localităţilor după nr. de secţii (log10)
 # hist(log10(table(baza$siruta)+1))
-# #Distribu?ia sec?iilor neg?site
+# #Distribuţia secţiilor negăsite
 View(statistica.sectii[order(-statistica.sectii$sectii.negasite),])
 # hist(log10(statistica.sectii$sectii.negasite))
 # 
-#Compar sec?iile din B/S3, s? v?d care e problema
+#Compar secţiile din B/S3, să văd care e problema
 rstudio::viewData(baza[baza$siruta == 179169,])
 rstudio::viewData(a.ref.work[a.ref.work$siruta == 179169,])
-# #Ia?i
+# #Iaşi
 # rstudio::viewData(baza[baza$siruta == 95060,])
 # rstudio::viewData(a.ref.work[a.ref.work$siruta == 95060,])
 # 
 # rstudio::viewData(baza[baza$siruta == 179196,])
 # rstudio::viewData(a.ref.work[a.ref.work$siruta == 179196,])
 # 
-#Timi?oara multe adrese cu ortografii diferite
+#Timişoara multe adrese cu ortografii diferite
 rstudio::viewData(baza[baza$siruta == 155243,])
 rstudio::viewData(a.ref.work[a.ref.work$siruta == 155243,])
-#Bra?ov
+#Braşov
 rstudio::viewData(baza[baza$siruta == 40198,])
 rstudio::viewData(a.ref.work[a.ref.work$siruta == 40198,])
 
-# #condi?ie tripl?? denumire min.dist, nr +/- 0.015 ?i nr.sec?ie la fel?
-# #eventual o condi?ie suplimentar?, cu denumire identic? a celei dinainte sau de dup??
-# #sau dac? aia dinainte la parl e identic?, s? fie ?i la ref!!!******
+# #condiţie triplă denumire min.dist, nr +/- 0.015 şi nr.secţie la fel?
+# #eventual o condiţie suplimentară, cu denumire identică a celei dinainte sau de după?
+# #sau dacă aia dinainte la parl e identică, să fie şi la ref!!!******
 # 
 # 
 
@@ -412,7 +412,7 @@ rstudio::viewData(a.ref.work[a.ref.work$siruta == 40198,])
 # write.table(x=a.unite, file="a.unite.csv", sep = ";", row.names = FALSE)
 
 #eventual de verificat cu agrep sau adist?
-#Separare a.par$adresa.parl pe ?coal?-sal?-adres?
+#Separare a.par$adresa.parl pe şcoală-sală-adresă
 
 # length(grep("CAMINUL CULTURAL", a.par$Adresa.par))
 # length(grep("CASA DE CULTURA", a.par$Adresa.par))
