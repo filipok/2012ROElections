@@ -13,31 +13,31 @@ pri.circ.all <- rbind(pri.circ, pri.circ.2)
 source("2012-referendum-0.2.R")
 ################################################################################
 #coduri siruta aiurea
-ref.2012.circ.pro[ref.2012.circ.pro$DEN_CIRC_R == "PEªTIªANI","siruta"] <- 81184
-ref.2012.circ.pro[ref.2012.circ.pro$DEN_CIRC_R == "BÃLÃNEªTI","siruta"]<- 78748
+ref.2012.circ.pro[ref.2012.circ.pro$DEN_CIRC_R == "PEÅžTIÅžANI","siruta"] <- 81184
+ref.2012.circ.pro[ref.2012.circ.pro$DEN_CIRC_R == "BÄ‚LÄ‚NEÅžTI","siruta"]<- 78748
 ref.2012.circ.pro[ref.2012.circ.pro$DEN_CIRC_R == "BAIA DE FIER","siruta"] <- 78711
 
 ################################################################################
-#facem merge pentru a introduce câºtigãtorii primãriilor:
+#facem merge pentru a introduce c??tig?torii prim?riilor:
 ################################################################################
 referendum <- merge(ref.2012.circ.pro, new.prim, all.x = TRUE)
 referendum$CODU <- NULL
 ################################################################################
-#facem încã un merge cu rezultatele la primãrie la localele din 2012
+#facem ?nc? un merge cu rezultatele la prim?rie la localele din 2012
 ################################################################################
 referendum <- merge(referendum, pri.circ.all, all.x = TRUE)
 
 ################################################################################
 source("siruta2008/siruta2008.R")
-#ºi facem un merge
+#?i facem un merge
 ################################################################################
-siruta2008$RANG[siruta2008$NAME == "Breazu"] <- "V" #eroare în fiºier siruta
-#mai sunt erori, cu ranguri "" ºi "0" în loc de "V"
+siruta2008$RANG[siruta2008$NAME == "Breazu"] <- "V" #eroare ?n fi?ier siruta
+#mai sunt erori, cu ranguri "" ?i "0" ?n loc de "V"
 referendum <- merge(referendum, siruta2008[siruta2008$RANG != "V" & 
   siruta2008$RANG != "" & siruta2008$RANG != "0", 
                                      c("X", "Y", "SIRUTA_SUP")], 
               by.x = "siruta", by.y = "SIRUTA_SUP", all.x = TRUE)
-#mai sunt unele puse aiurea la rang V, deºi ar trebui IV
+#mai sunt unele puse aiurea la rang V, de?i ar trebui IV
 qqq <- siruta2008[siruta2008$RANG == "V" & siruta2008$NAME == siruta2008$NAME_SUP,]
 backup.referendum <- referendum
 #print(nrow(referendum[is.na(referendum$X),]))
@@ -49,7 +49,7 @@ for(i in 1:nrow(backup.referendum[is.na(backup.referendum$X),])){
   }
 }
 rm(qqq, backup.referendum)
-#pus manual coordonatele geogragfice la unele care nu precizau care e satul reºedinþã al comunei (rang IV vs V)
+#pus manual coordonatele geogragfice la unele care nu precizau care e satul re?edin?? al comunei (rang IV vs V)
 #sau care aveau probleme cu diacriticele
 referendum[referendum$siruta == 13891,c(46,47)] <- siruta2008[siruta2008$SIRUTA == 13917, c(1,2)]
 referendum[referendum$siruta == 32179,c(46,47)] <- siruta2008[siruta2008$SIRUTA == 28326, c(1,2)]
@@ -82,7 +82,7 @@ referendum[referendum$siruta == 180091,c(46,47)] <-siruta2008[siruta2008$SIRUTA 
 culori <- c("blue", "red", "green", "white", "brown", "pink", "white", "white",
             "white", "lightgreen", "black", "yellow", "white", "white")
 names(culori) <- unique(referendum$abrevi)
-#primarii locale 2012 pe toatã România
+#primarii locale 2012 pe toat? Rom?nia
 pdf("2012-romania.pdf")
 symbols(referendum$X, referendum$Y, circles=sqrt(referendum$TAP)/2000, inches=FALSE,
 main="Romania", 
@@ -93,18 +93,18 @@ symbols(referendum$X, referendum$Y, circles=sqrt(referendum$TAP)/2000, inches=FA
         main="Romania", 
         xlab="longitudine", ylab="latitudine", bg = culori[referendum$abrevi], col = rgb(0,0,0,0.2))
 dev.off()
-#primarii locale 2012, judeþ cu judeþ
+#primarii locale 2012, jude? cu jude?
 pdf("2012-judete-color.pdf")
 for(judet in unique(referendum$DEN_JUD)){
   attach(referendum[referendum$DEN_JUD == judet,])
   symbols(X, Y, circles=sqrt(TAP)/2000, inches=FALSE,
-          main=paste("Judeþul", judet), 
+          main=paste("JudeÅ£ul", judet), 
           xlab="", ylab="", bg = culori[abrevi], col = rgb(0,0,0,0.2))
   text(X, Y, labels = format(TAPU_P_Ref, digits = 2), cex = 0.7)
   detach()
 }
 dev.off()
-#referendum 2012, participare la vot reprezentatã de culoare
+#referendum 2012, participare la vot reprezentat? de culoare
 pdf("2012-participare-referendum-color.pdf")
 referendum2 <- referendum
 referendum2$TAPU_P_Ref[referendum2$TAPU_P_Ref > 0.5] <- 1
@@ -115,32 +115,32 @@ symbols(referendum2$X, referendum2$Y, circles=sqrt(referendum2$TAP)/2000, inches
         xlab="longitudine", ylab="latitudine", bg = rgb(1, 1-referendum2$TAPU_P_Ref, 1-referendum2$TAPU_P_Ref), col = rgb(0,0,0,0.2))
 rm(referendum2)
 dev.off()
-#boxplot "Prezenþa la referendum în funcþie de culoare primari (USL versus PDL)
+#boxplot "Prezen?a la referendum ?n func?ie de culoare primari (USL versus PDL)
 pdf("2012-prezenta.pdf")
 attach(referendum[referendum$abrevi %in% c("allUSL","allPDL"),]) 
 boxplot(TAPU_P_Ref ~ abrevi * DEN_JUD, varwidth = TRUE, las = 2, 
         col = c("blue", "red"), ylim = c(0, 1.25), 
-        main = "Prezenþa la referendum \nîn funcþie de culoarea primarilor 
+        main = "Prezen?a la referendum \n?n func?ie de culoarea primarilor 
         (USL versus PDL)")
 detach()
 dev.off()
-#boxplot "Prezenþa la referendum în funcþie de culoare primari (USL versus PDL)
-# în caz de alegeri strânse
+#boxplot "Prezen?a la referendum ?n func?ie de culoare primari (USL versus PDL)
+# ?n caz de alegeri str?nse
 pdf("2012-prezenta-stranse.pdf")
 referendum2  <- referendum[(referendum$allPDL/referendum$allUSL) > 0.8 
                   & (referendum$allPDL/referendum$allUSL) < 1.2 
                   &  referendum$abrevi %in% c("allUSL", "allPDL"),]
 boxplot(TAPU_P_Ref ~ abrevi * DEN_JUD, data = referendum2, varwidth = TRUE, 
         las = 2, col = c("blue", "red"), ylim = c(0, 1.25), notch = FALSE,
-        main = "Prezenþa la referendum \nîn funcþie de culoarea primarilor 
-        (USL versus PDL) în caz de alegeri strânse")
+        main = "Prezen?a la referendum \n?n func?ie de culoarea primarilor 
+        (USL versus PDL) ?n caz de alegeri str?nse")
 rm(referendum2)
 dev.off()
-#coplot Participare la vot la locale vs referendum în funcþie de culoare primari
+#coplot Participare la vot la locale vs referendum ?n func?ie de culoare primari
 pdf("2012-participare-locale-ref.pdf")
 coplot(TAPU_P_Ref ~ TAPU_P | abrevi, 
        data = referendum[referendum$abrevi %in% c("allUSL", "allPDL"),], 
-       xlab = "Participarea la vot la locale vs referendum în funcþie de culoarea
+       xlab = "Participarea la vot la locale vs referendum Ã®n funcÅ£ie de culoarea
        primarilor")
 dev.off()
 #
