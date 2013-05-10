@@ -13,3 +13,4 @@ for (i in 1:length(unique(a.par$JUD))){
 # }
 
 # rm(listapar, listaref)
+
