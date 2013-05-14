@@ -287,16 +287,24 @@ for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva t
   listoi <- testdecalat(listapar[[i]], listaref[[i]], distanta, procent)
   listapar[[i]] <- listoi[[1]]
   listaref[[i]] <- listoi[[2]]
-#   #7.Mai rulez încă o dată punctul #6 cu distanta = 0.2
-#   listoi <- testdecalat(listapar[[i]], listaref[[i]], 0.2, procent)
-#   listapar[[i]] <- listoi[[1]]
-#   listaref[[i]] <- listoi[[2]]  
+  #7.Mai rulez încă o dată punctul #6 cu distanta = 0.2
+  listoi <- testdecalat(listapar[[i]], listaref[[i]], 0.2, procent)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]  
 }
 
 close(pb)
-timp2 <- Sys.time()
-print(timp2 - timp1)
-beep(10)
+
+baza <- listapar[[1]]
+a.ref.work <- listaref[[1]]
+pb <- txtProgressBar(min = 0, max = length(unique(a.par$siruta)), style = 3, 
+                     char = "+")
+for(j in 2:length(unique(a.par$siruta))){
+  setTxtProgressBar(pb, j)
+  baza <- rbind(baza, listapar[[j]])
+  a.ref.work <- rbind(a.ref.work, listaref[[j]])
+}
+close(pb)
 
 #au mai rămas unele secţii decalate...!
 #eventual separ oraşele mari şi pe cuvinte cheie gen şcoală grădiniţă etc
@@ -326,6 +334,12 @@ statistica.sectii$sectii.negasite <- statistica.sectii$sectii.existente - statis
 # hist(log10(table(baza$siruta)+1))
 # #Distribuţia secţiilor negăsite
 View(statistica.sectii[order(-statistica.sectii$sectii.negasite),])
+sum(statistica.sectii$sectii.negasite)
+
+timp2 <- Sys.time()
+print(timp2 - timp1)
+beep(10)
+
 # hist(log10(statistica.sectii$sectii.negasite))
 # 
 #Compar secţiile din B/S3, să văd care e problema
