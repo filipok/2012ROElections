@@ -234,13 +234,15 @@ a.ref <- a.ref[a.ref$JUD != 43,]
 ################################################################################
 
 
+timp1<- Sys.time()
 baza <- a.par
 a.ref.work <- a.ref
 coloane <- matrix(rep(NA, 18456 * 3), ncol = 3)
 baza <- cbind(baza, coloane)
 colnames(baza)[11:13] <- c("SV.ref.echiv", "Adresa.ref.echiv","Aleg.ref.echiv")
 
-timp1<- Sys.time()
+
+rm(statistica.sectii)
 #coeficienţii pentru căutare
 distanta <- 0.3
 distanta2 <- 0.4
