@@ -1,3 +1,11 @@
+library("R2HTML")
+vezi = function (x) { 
+  #de la Georgian
+  file.remove( 'test.html');
+  HTML(x, file='test.html', row.names=TRUE, innerBorder=1);
+  system(' "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" "C:\\Users\\Filip\\Dropbox\\R_Work\\test.html"  ', wait=FALSE )
+}
+
 beep <- function(n = 3){
   #source: http://stackoverflow.com/questions/3365657/is-there-a-way-to-make-r-beep-play-a-sound-at-the-end-of-a-script
   for(i in seq(n)){
@@ -34,17 +42,19 @@ testadresa <- function(lista1, lista2, distanta){
 
 testnraleg <- function(lista1, lista2){
   #funcţie de testare pe baza numărului de alegători
-  for(n in 1:nrow(lista1)){
-    if(is.na(lista1[n, 11])){
-      numar.curent <- lista1[n, 10]
-      vector.numere.ref <- lista2[,9]
-      vector.numere.ref <- abs((vector.numere.ref/numar.curent)-1)
-      if (sum(vector.numere.ref < procent) == 1){ #condiţie suplimentară, să fie unul singur
-        #Alocăm valoarea ce corespunde înregistrării cu diferenţă minimă - min(vector.numere.ref)
-        lista1[n,11:13] <- lista2[,c(6,7,9)][which(vector.numere.ref == min(vector.numere.ref)),]
-        #Secţia din a.ref alocată deja se scoate din listă
-        lista2[which(vector.numere.ref == min(vector.numere.ref)),] <- NA
-        lista2 <- lista2[!is.na(lista2$JUD),]
+  if(nrow(lista1) < 20){
+    for(n in 1:nrow(lista1)){
+      if(is.na(lista1[n, 11])){
+        numar.curent <- lista1[n, 10]
+        vector.numere.ref <- lista2[,9]
+        vector.numere.ref <- abs((vector.numere.ref/numar.curent)-1)
+        if (sum(vector.numere.ref < procent) == 1){ #condiţie suplimentară, să fie unul singur
+          #Alocăm valoarea ce corespunde înregistrării cu diferenţă minimă - min(vector.numere.ref)
+          lista1[n,11:13] <- lista2[,c(6,7,9)][which(vector.numere.ref == min(vector.numere.ref)),]
+          #Secţia din a.ref alocată deja se scoate din listă
+          lista2[which(vector.numere.ref == min(vector.numere.ref)),] <- NA
+          lista2 <- lista2[!is.na(lista2$JUD),]
+        }
       }
     }
   }
@@ -89,6 +99,56 @@ testcomplex <- function(lista1, lista2, distanta, procent){
               #codul siruta şi numărul de secţie corespunzătoare
               lista1[n, 13] <- 
                 lista2[lista2$SV.ref == lista1[n, 5],9] 
+              #Secţia din a.ref alocată deja se scoate din listă
+              lista2[lista2$SV.ref == lista1[n, 5],] <- NA
+              lista2 <- lista2[!is.na(lista2$JUD),]
+            }
+          }
+        }
+      }
+    }
+  }
+  listoi <- vector ("list", 2)
+  listoi[[1]] <- lista1
+  listoi[[2]] <- lista2
+  listoi
+}
+
+testcomplex2 <- function(lista1, lista2, distanta, procent){
+  #Căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5% 
+  #Diferenţa faţă de funcţia testcomplex e că nu e musai ca adresele găsite să
+  #fie identice (mai sunt erori de ortografie).
+  for(n in 1:nrow(lista1)){
+    if(is.na(lista1[n, 11])){
+      #Mai întâi caut secţii cu nume asemănător
+      adresa.curenta <- lista1[n,8] #adresa secţiei curente
+      if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
+        adresa.gasita <- agrep(adresa.curenta, lista2[,7], 
+                               value = TRUE, max.distance = distanta)
+        indice.gasit <- agrep(adresa.curenta, lista2[,7], 
+                              value = FALSE, max.distance = distanta)
+        #Acum avem un vector în indice.gasit
+        #Iau doar răspunsurile nenule, dar nu neapărat identice
+        if(length(adresa.gasita) > 0){
+          #print(paste("am trecut de IF-ul 1 cu length(unique) == 1 şi valoarea e",length(unique(adresa.gasita))))
+          numar.curenta <- lista1[n,5] #numar secţie parl
+          #Următorul IF verifică dacă numărul secţiei de la parlamentare se
+          #regăseşte în vectorul de secţii găsite acum pentru referendum
+          #De exemplu, dacă secţia la parlamentare e 366, iar vectorul de la
+          #referendum e c(365, 366, 367), este ok.
+          if(numar.curenta %in% lista2[,6][indice.gasit]){
+            #Iar următorul IF verifică dacă numărul de alegători e stabil
+            #de la parlamentare la referendum
+            if(abs((lista2[lista2$SV.ref == 
+                             numar.curenta, 9] / lista1[n,10])- 1) < procent){
+              #Acum scriem echivalenţele
+              #fiind acelaşi număr de secţie, scriem nr. de la parlamentare
+              lista1[n, 11] <- lista1[n, 5] 
+              #Scriem numărul de alegători, luat din înregistrarea cu 
+              #codul siruta şi numărul de secţie corespunzătoare
+              lista1[n, 13] <- lista2[lista2$SV.ref == lista1[n, 5],9] 
+              #adresa gasita
+              lista1[n, 12] <- lista2[lista2$SV.ref == lista1[n, 5],7]
               #Secţia din a.ref alocată deja se scoate din listă
               lista2[lista2$SV.ref == lista1[n, 5],] <- NA
               lista2 <- lista2[!is.na(lista2$JUD),]
@@ -293,6 +353,12 @@ for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva t
   listoi <- testdecalat(listapar[[i]], listaref[[i]], 0.2, procent)
   listapar[[i]] <- listoi[[1]]
   listaref[[i]] <- listoi[[2]]  
+  #8. Căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
+  #(diferenţa faţă de cealaltă funcţie testcomplex e că nu cere ca adresele
+  #găsite să fie identice, existând mici typos uneori)
+  listoi <- testcomplex2(listapar[[i]], listaref[[i]], distanta, procent)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]
 }
 
 close(pb)
@@ -342,10 +408,13 @@ timp2 <- Sys.time()
 print(timp2 - timp1)
 beep(10)
 
+vezi(statistica.sectii[order(-statistica.sectii$sectii.negasite),])
+vezi(baza[baza$siruta == 54975,])
+vezi(a.ref.work[a.ref.work$siruta == 54975,])
 # hist(log10(statistica.sectii$sectii.negasite))
 # 
 #Compar secţiile din B/S3, să văd care e problema
-rstudio::viewData(baza[baza$siruta == 179169,])
+rstudio::viewData(baza[baza$siruta == 155243,])
 rstudio::viewData(a.ref.work[a.ref.work$siruta == 179169,])
 # #Iaşi
 # rstudio::viewData(baza[baza$siruta == 95060,])
