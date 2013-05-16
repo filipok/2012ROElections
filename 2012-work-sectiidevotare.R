@@ -130,37 +130,37 @@ for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva t
   listoi <- testadresa(listapar[[i]], listaref[[i]], distanta)
   listapar[[i]] <- listoi[[1]]
   listaref[[i]] <- listoi[[2]]
-#   #2. Acum testăm în funcţie de numărul de alegători
-#   listoi <- testnraleg(listapar[[i]], listaref[[i]])
-#   listapar[[i]] <- listoi[[1]]
-#   listaref[[i]] <- listoi[[2]]
-#   #3. Acum testăm iar în funcţie de adresă,cu un coeficient de distanţă mai mare
-#   listoi <- testadresa(listapar[[i]], listaref[[i]], distanta2)
-#   listapar[[i]] <- listoi[[1]]
-#   listaref[[i]] <- listoi[[2]]
-#   #4. Acum căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
-#   listoi <- testcomplex(listapar[[i]], listaref[[i]], distanta, procent)
-#   listapar[[i]] <- listoi[[1]]
-#   listaref[[i]] <- listoi[[2]]
-#   #5. Mai rulez încă o dată, cu distanta2=0.4
-#   listoi <- testcomplex(listapar[[i]], listaref[[i]], distanta2, procent)
-#   listapar[[i]] <- listoi[[1]]
-#   listaref[[i]] <- listoi[[2]]
-#   #6.aici încerc să identific grupurile de secţii cu aceeaşi adresă, dar care
-#   #nu au acelaşi număr, fiind decalate
-#   listoi <- testdecalat(listapar[[i]], listaref[[i]], distanta, procent)
-#   listapar[[i]] <- listoi[[1]]
-#   listaref[[i]] <- listoi[[2]]
-#   #7.Mai rulez încă o dată punctul #6 cu distanta = 0.2
-#   listoi <- testdecalat(listapar[[i]], listaref[[i]], 0.2, procent)
-#   listapar[[i]] <- listoi[[1]]
-#   listaref[[i]] <- listoi[[2]]  
-#   #8. Căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
-#   #(diferenţa faţă de cealaltă funcţie testcomplex e că nu cere ca adresele
-#   #găsite să fie identice, existând mici typos uneori)
-#   listoi <- testcomplex2(listapar[[i]], listaref[[i]], distanta, procent)
-#   listapar[[i]] <- listoi[[1]]
-#   listaref[[i]] <- listoi[[2]]
+  #2. Acum testăm în funcţie de numărul de alegători
+  listoi <- testnraleg(listapar[[i]], listaref[[i]])
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]
+  #3. Acum testăm iar în funcţie de adresă,cu un coeficient de distanţă mai mare
+  listoi <- testadresa(listapar[[i]], listaref[[i]], distanta2)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]
+  #4. Acum căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
+  listoi <- testcomplex(listapar[[i]], listaref[[i]], distanta, procent)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]
+  #5. Mai rulez încă o dată, cu distanta2=0.4
+  listoi <- testcomplex(listapar[[i]], listaref[[i]], distanta2, procent)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]
+  #6.aici încerc să identific grupurile de secţii cu aceeaşi adresă, dar care
+  #nu au acelaşi număr, fiind decalate
+  listoi <- testdecalat(listapar[[i]], listaref[[i]], distanta, procent)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]
+  #7.Mai rulez încă o dată punctul #6 cu distanta = 0.2
+  listoi <- testdecalat(listapar[[i]], listaref[[i]], 0.2, procent)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]  
+  #8. Căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
+  #(diferenţa faţă de cealaltă funcţie testcomplex e că nu cere ca adresele
+  #găsite să fie identice, existând mici typos uneori)
+  listoi <- testcomplex2(listapar[[i]], listaref[[i]], distanta, procent)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]
 }
 
 close(pb)
@@ -174,6 +174,7 @@ a.ref.work <- do.call("rbind", listaref)
 #eventual să scot chestiile între egaluri (adică ghilimele)?
 
 #analiză distribuţie secţii găsite
+#nu funcţionează dacă folosim data tables
 numar.sectii <- table(baza[, 3])
 numar.sectii <- as.data.frame(numar.sectii)
 gasite <- !is.na(baza[, 11])
