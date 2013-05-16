@@ -55,6 +55,34 @@ testadresaDT <- function(lista1, lista2, distanta){
   listoi
 }
 
+testadresaMT <- function(lista1, lista2, distanta){
+  #funcţie de testare pe baza adresei pentru matrici
+  lista1 <- as.matrix(lista1)
+  lista2 <- as.matrix(lista2)
+  for(n in 1:nrow(lista1)){ #pt fiecare secţie din localitate
+    adresa.curenta <- lista1[n,8] #adresa secţiei curente
+    if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
+      adresa.gasita <- agrep(adresa.curenta, lista2[,7], 
+                             value = TRUE, max.distance = distanta)
+      indice.gasit <- agrep(adresa.curenta, lista2[,7], 
+                            value = FALSE, max.distance = distanta)
+      if(length(adresa.gasita) == 1){ #iau doar răspunsurile unice (şi nenule)
+        #completăm adresa, nr. secţiei şi nr. de alegători de la referendum
+        lista1[n, 12] <- adresa.gasita
+        lista1[n, 11] <- lista2[,6][indice.gasit]
+        lista1[n, 13] <- lista2[,9][indice.gasit]
+        #Secţia din a.ref alocată deja se scoate din listă
+        lista2[indice.gasit,] <- NA
+        lista2 <- lista2[!is.na(lista2[,1]), ,drop = FALSE]
+      }
+    }
+  }
+  listoi <- vector ("list", 2)
+  listoi[[1]] <- lista1
+  listoi[[2]] <- lista2
+  listoi
+}
+
 testnraleg <- function(lista1, lista2){
   #funcţie de testare pe baza numărului de alegători
   if(nrow(lista1) < 20){
