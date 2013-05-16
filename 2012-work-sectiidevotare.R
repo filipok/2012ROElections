@@ -121,6 +121,18 @@ procent <- 0.015
 listapar <- split(baza, as.numeric(baza$siruta))
 listaref <- split(a.ref.work, a.ref.work$siruta)
 
+# listache <- vector("list", length(unique(a.par$siruta)))
+# for(i in 1:length(unique(a.par$siruta))){
+#   listoi <- vector ("list", 2)
+#   listoi[[1]] <- listapar[[i]]
+#   listoi[[2]] <- listaref[[i]]
+#   listache[[i]] <- listoi
+# }
+# timp5 <- Sys.time()
+# listache2 <- lapply(listache, testadresaSA, distanta)
+# timp6 <- Sys.time()
+# timp6 - timp5
+
 timp3<- Sys.time()
 pb <- txtProgressBar(min = 0, max = length(unique(a.par$siruta)), style = 3)
 source("2012-work-functiicomparare.R") #încărcăm funcţiile apelate în loop
