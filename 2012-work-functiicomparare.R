@@ -18,8 +18,7 @@ testadresa <- function(lista1, lista2, distanta){
         lista1[n, 11] <- lista2[,6][indice.gasit]
         lista1[n, 13] <- lista2[,9][indice.gasit]
         #Secţia din a.ref alocată deja se scoate din listă
-        lista2[indice.gasit,] <- NA
-        lista2 <- lista2[!is.na(lista2[,1]),]
+        lista2 <- lista2[-indice.gasit,]
       }
     }
   }
@@ -72,8 +71,7 @@ testadresaMT <- function(lista1, lista2, distanta){
         lista1[n, 11] <- lista2[,6][indice.gasit]
         lista1[n, 13] <- lista2[,9][indice.gasit]
         #Secţia din a.ref alocată deja se scoate din listă
-        lista2[indice.gasit,] <- NA
-        lista2 <- lista2[!is.na(lista2[,1]), ,drop = FALSE]
+        lista2 <- lista2[-indice.gasit, , drop = FALSE]
       }
     }
   }
@@ -100,8 +98,7 @@ testadresaSA <- function(listoi, distanta){
         lista1[n, 11] <- lista2[,6][indice.gasit]
         lista1[n, 13] <- lista2[,9][indice.gasit]
         #Secţia din a.ref alocată deja se scoate din listă
-        lista2[indice.gasit,] <- NA
-        lista2 <- lista2[!is.na(lista2[,1]),]
+        lista2 <- lista2[-indice.gasit,]
       }
     }
   }
@@ -123,8 +120,7 @@ testnraleg <- function(lista1, lista2){
           #Alocăm valoarea ce corespunde înregistrării cu diferenţă minimă - min(vector.numere.ref)
           lista1[n,11:13] <- lista2[,c(6,7,9)][which(vector.numere.ref == min(vector.numere.ref)),]
           #Secţia din a.ref alocată deja se scoate din listă
-          lista2[which(vector.numere.ref == min(vector.numere.ref)),] <- NA
-          lista2 <- lista2[!is.na(lista2$JUD),]
+          lista2 <- lista2[-which(vector.numere.ref == min(vector.numere.ref)),]
         }
       }
     }
@@ -168,11 +164,9 @@ testcomplex <- function(lista1, lista2, distanta, procent){
               lista1[n, 11] <- lista1[n, 5] 
               #Scriem numărul de alegători, luat din înregistrarea cu 
               #codul siruta şi numărul de secţie corespunzătoare
-              lista1[n, 13] <- 
-                lista2[lista2$SV.ref == lista1[n, 5],9] 
+              lista1[n, 13] <- lista2[lista2$SV.ref == lista1[n, 5],9] 
               #Secţia din a.ref alocată deja se scoate din listă
-              lista2[lista2$SV.ref == lista1[n, 5],] <- NA
-              lista2 <- lista2[!is.na(lista2$JUD),]
+              lista2 <- lista2[lista2$SV.ref != lista1[n, 5],]
             }
           }
         }
@@ -221,8 +215,7 @@ testcomplex2 <- function(lista1, lista2, distanta, procent){
               #adresa gasita
               lista1[n, 12] <- lista2[lista2$SV.ref == lista1[n, 5],7]
               #Secţia din a.ref alocată deja se scoate din listă
-              lista2[lista2$SV.ref == lista1[n, 5],] <- NA
-              lista2 <- lista2[!is.na(lista2$JUD),]
+              lista2 <- lista2[lista2$SV.ref != lista1[n, 5],]
             }
           }
         }

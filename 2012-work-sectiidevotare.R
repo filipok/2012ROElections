@@ -16,15 +16,11 @@ beep <- function(n = 3){
   }
 }
 
-
-
 rm(list = ls(all = TRUE))
-################################################################################
 #Apel cod pentru locale, referendum şi parlamentare
 source("2012-locale.R")
 source("2012-referendum.R")
 source("2012-parlamentare.R")
-################################################################################
 
 #Un data frame pentru fiecare listă de secţii de votare, incl. nr. de alegători
 a.loc <- merge(nume.sec.loc.2012, 
@@ -90,17 +86,15 @@ a.ref[a.ref$siruta == 999, "siruta"] <- 275
 a.par <- a.par[a.par$JUD != 43,]
 a.ref <- a.ref[a.ref$JUD != 43,]
 
-################################################################################
 #Urmează verificările propriu-zise
 #Folosesc ca bază parlamentarele, am cele mai multe secţii în RO
-################################################################################
-
 
 timp1<- Sys.time()
 baza <- a.par
 a.ref.work <- a.ref
 coloane <- matrix(rep(NA, 18456 * 3), ncol = 3)
 baza <- cbind(baza, coloane)
+rm(coloane)
 colnames(baza)[11:13] <- c("SV.ref.echiv", "Adresa.ref.echiv","Aleg.ref.echiv")
 baza[,11] <- as.integer(NA)
 baza[,12] <- as.character(NA)
