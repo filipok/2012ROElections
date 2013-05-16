@@ -113,25 +113,13 @@ distanta2 <- 0.4
 distanta3 <- 0.5
 procent <- 0.015
 
-#separ dataframe-ul în câte unul pentru fiecare cod Siruta
-listapar <- vector ("list", length(unique(a.par$siruta)))
-listaref <- vector ("list", length(unique(a.par$siruta)))
-
-#bucată de activat dacă folosim data frame clasic
-listapar <- split(baza, as.numeric(baza$siruta))
-listaref <- split(a.ref.work, a.ref.work$siruta)
-
 #bucată de activat dacă folosim data.table
 # baza <- as.data.table(baza)
 # a.ref.work <- as.data.table(a.ref.work)
-# pb <- txtProgressBar(min = 0, max = length(unique(a.par$siruta)), style = 3, 
-#                      char = "*")
-# for (i in 1:length(unique(a.par$siruta))){
-#   setTxtProgressBar(pb, i)
-#   listapar[[i]] <- subset(baza, siruta == unique(a.par$siruta)[i])
-#   listaref[[i]] <- subset(a.ref.work, siruta == unique(a.par$siruta)[i])
-# }
-# close(pb)
+
+#splitare date pe siruta
+listapar <- split(baza, as.numeric(baza$siruta))
+listaref <- split(a.ref.work, a.ref.work$siruta)
 
 timp3<- Sys.time()
 pb <- txtProgressBar(min = 0, max = length(unique(a.par$siruta)), style = 3)
@@ -186,10 +174,10 @@ a.ref.work <- do.call("rbind", listaref)
 #eventual să scot chestiile între egaluri (adică ghilimele)?
 
 #analiză distribuţie secţii găsite
-numar.sectii <- table(baza$siruta)
+numar.sectii <- table(baza[, 3])
 numar.sectii <- as.data.frame(numar.sectii)
-gasite <- !is.na(baza$SV.ref.echiv)
-gasite <- cbind(baza$siruta, gasite)
+gasite <- !is.na(baza[, 11])
+gasite <- cbind(baza[, 3], gasite)
 gasite <- as.data.frame(gasite)
 gasite$gasite <- as.numeric(gasite$gasite)-1
 agregare <- aggregate(gasite$gasite, by = list(gasite$V1), sum)
