@@ -1,9 +1,11 @@
 library("R2HTML")
+library("data.table")
+
 vezi = function (x) { 
   #de la Georgian
   file.remove( 'test.html');
   HTML(x, file='test.html', row.names=TRUE, innerBorder=1);
-  system(' "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" "C:\\Users\\Filip\\Dropbox\\R_Work\\test.html"  ', wait=FALSE )
+  system(' "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" "C:\\Users\\Filip\\Dropbox\\R_Work\\2012AlegeriRomania\\test.html"  ', wait=FALSE )
 }
 
 beep <- function(n = 3){
@@ -31,6 +33,32 @@ testadresa <- function(lista1, lista2, distanta){
         #Secţia din a.ref alocată deja se scoate din listă
         lista2[indice.gasit,] <- NA
         lista2 <- lista2[!is.na(lista2[,1]),]
+      }
+    }
+  }
+  listoi <- vector ("list", 2)
+  listoi[[1]] <- lista1
+  listoi[[2]] <- lista2
+  listoi
+}
+
+
+testadresaDT <- function(lista1, lista2, distanta){
+  #funcţie de testare pe baza adresei pentru data.tables
+  for(n in 1:nrow(lista1)){ #pt fiecare secţie din localitate
+    adresa.curenta <- lista1[n,adresa.par] #adresa secţiei curente
+    if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
+      adresa.gasita <- agrep(adresa.curenta, lista2[,adresa.ref], 
+                             value = TRUE, max.distance = distanta)
+      indice.gasit <- agrep(adresa.curenta, lista2[,adresa.ref], 
+                            value = FALSE, max.distance = distanta)
+      if(length(adresa.gasita) == 1){ #iau doar răspunsurile unice (şi nenule)
+        #completăm adresa, nr. secţiei şi nr. de alegători de la referendum
+        set(lista1, n, 12L, adresa.gasita)
+        set(lista1, n, 11L, lista2[,SV.ref][indice.gasit])
+        set(lista1, n, 13L, lista2[,ta][indice.gasit])
+        #Secţia din a.ref alocată deja se scoate din listă
+        lista2 <- subset(lista2, SV.ref != lista1[n, SV.ref.echiv])
       }
     }
   }
@@ -300,7 +328,9 @@ a.ref.work <- a.ref
 coloane <- matrix(rep(NA, 18456 * 3), ncol = 3)
 baza <- cbind(baza, coloane)
 colnames(baza)[11:13] <- c("SV.ref.echiv", "Adresa.ref.echiv","Aleg.ref.echiv")
-
+baza[,11] <- as.integer(NA)
+baza[,12] <- as.character(NA)
+baza[,13] <- as.integer(NA)
 
 rm(statistica.sectii)
 #coeficienţii pentru căutare
@@ -312,6 +342,7 @@ procent <- 0.015
 #separ dataframe-ul în câte unul pentru fiecare cod Siruta
 listapar <- vector ("list", length(unique(a.par$siruta)))
 listaref <- vector ("list", length(unique(a.par$siruta)))
+
 pb <- txtProgressBar(min = 0, max = length(unique(a.par$siruta)), style = 3, 
                      char = "*")
 for (i in 1:length(unique(a.par$siruta))){
@@ -321,6 +352,18 @@ for (i in 1:length(unique(a.par$siruta))){
 }
 close(pb)
 
+#bucată de activat dacă folosim data.table
+# baza <- as.data.table(baza)
+# a.ref.work <- as.data.table(a.ref.work)
+# pb <- txtProgressBar(min = 0, max = length(unique(a.par$siruta)), style = 3, 
+#                      char = "*")
+# for (i in 1:length(unique(a.par$siruta))){
+#   setTxtProgressBar(pb, i)
+#   listapar[[i]] <- subset(baza, siruta == unique(a.par$siruta)[i])
+#   listaref[[i]] <- subset(a.ref.work, siruta == unique(a.par$siruta)[i])
+# }
+# close(pb)
+
 pb <- txtProgressBar(min = 0, max = length(unique(a.par$siruta)), style = 3)
 for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva teste
   setTxtProgressBar(pb, i)
@@ -328,37 +371,37 @@ for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva t
   listoi <- testadresa(listapar[[i]], listaref[[i]], distanta)
   listapar[[i]] <- listoi[[1]]
   listaref[[i]] <- listoi[[2]]
-  #2. Acum testăm în funcţie de numărul de alegători
-  listoi <- testnraleg(listapar[[i]], listaref[[i]])
-  listapar[[i]] <- listoi[[1]]
-  listaref[[i]] <- listoi[[2]]
-  #3. Acum testăm iar în funcţie de adresă,cu un coeficient de distanţă mai mare
-  listoi <- testadresa(listapar[[i]], listaref[[i]], distanta2)
-  listapar[[i]] <- listoi[[1]]
-  listaref[[i]] <- listoi[[2]]
-  #4. Acum căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
-  listoi <- testcomplex(listapar[[i]], listaref[[i]], distanta, procent)
-  listapar[[i]] <- listoi[[1]]
-  listaref[[i]] <- listoi[[2]]
-  #5. Mai rulez încă o dată, cu distanta2=0.4
-  listoi <- testcomplex(listapar[[i]], listaref[[i]], distanta2, procent)
-  listapar[[i]] <- listoi[[1]]
-  listaref[[i]] <- listoi[[2]]
-  #6.aici încerc să identific grupurile de secţii cu aceeaşi adresă, dar care
-  #nu au acelaşi număr, fiind decalate
-  listoi <- testdecalat(listapar[[i]], listaref[[i]], distanta, procent)
-  listapar[[i]] <- listoi[[1]]
-  listaref[[i]] <- listoi[[2]]
-  #7.Mai rulez încă o dată punctul #6 cu distanta = 0.2
-  listoi <- testdecalat(listapar[[i]], listaref[[i]], 0.2, procent)
-  listapar[[i]] <- listoi[[1]]
-  listaref[[i]] <- listoi[[2]]  
-  #8. Căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
-  #(diferenţa faţă de cealaltă funcţie testcomplex e că nu cere ca adresele
-  #găsite să fie identice, existând mici typos uneori)
-  listoi <- testcomplex2(listapar[[i]], listaref[[i]], distanta, procent)
-  listapar[[i]] <- listoi[[1]]
-  listaref[[i]] <- listoi[[2]]
+#   #2. Acum testăm în funcţie de numărul de alegători
+#   listoi <- testnraleg(listapar[[i]], listaref[[i]])
+#   listapar[[i]] <- listoi[[1]]
+#   listaref[[i]] <- listoi[[2]]
+#   #3. Acum testăm iar în funcţie de adresă,cu un coeficient de distanţă mai mare
+#   listoi <- testadresa(listapar[[i]], listaref[[i]], distanta2)
+#   listapar[[i]] <- listoi[[1]]
+#   listaref[[i]] <- listoi[[2]]
+#   #4. Acum căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
+#   listoi <- testcomplex(listapar[[i]], listaref[[i]], distanta, procent)
+#   listapar[[i]] <- listoi[[1]]
+#   listaref[[i]] <- listoi[[2]]
+#   #5. Mai rulez încă o dată, cu distanta2=0.4
+#   listoi <- testcomplex(listapar[[i]], listaref[[i]], distanta2, procent)
+#   listapar[[i]] <- listoi[[1]]
+#   listaref[[i]] <- listoi[[2]]
+#   #6.aici încerc să identific grupurile de secţii cu aceeaşi adresă, dar care
+#   #nu au acelaşi număr, fiind decalate
+#   listoi <- testdecalat(listapar[[i]], listaref[[i]], distanta, procent)
+#   listapar[[i]] <- listoi[[1]]
+#   listaref[[i]] <- listoi[[2]]
+#   #7.Mai rulez încă o dată punctul #6 cu distanta = 0.2
+#   listoi <- testdecalat(listapar[[i]], listaref[[i]], 0.2, procent)
+#   listapar[[i]] <- listoi[[1]]
+#   listaref[[i]] <- listoi[[2]]  
+#   #8. Căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
+#   #(diferenţa faţă de cealaltă funcţie testcomplex e că nu cere ca adresele
+#   #găsite să fie identice, existând mici typos uneori)
+#   listoi <- testcomplex2(listapar[[i]], listaref[[i]], distanta, procent)
+#   listapar[[i]] <- listoi[[1]]
+#   listaref[[i]] <- listoi[[2]]
 }
 
 close(pb)
