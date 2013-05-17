@@ -1,0 +1,22 @@
+54975 - ar trebui rulat testdecalat(), cu un procent mai mare, 0.1-0.3?, şi cu adresă asemănătoare, ca la testcomplex2()
+95060 - testcomplex() cu procent mai mare?
+179196 - aici am blocuri de secţii cu acelaşi nr, procent ok, dar denumiri schimbate; de făcut funcţie nouă!
+40198 - testdecalat() cu procent mai mare, dar e problemă cu secţii noi...
+26564 - ar trebui rulat testdecalat(), dar cu adrese asemănătoare, atât în par, cât şi în ref... hm.
+130534 - testdecalat() cu mărirea distanţei
+9262 - testdecalat() cu procentaj mai mare, dar e problemă cu secţii noi
+13169 - de căutat după nr. secţie şi procentaj, eventual cu testdecalat() cu distanţă mai mare
+143450- testdecalat() cu procent mai mare; sau testcomplex() cu procent mai mare?
+114319 - testdecalat() cu procent mult mai mare, dar sunt secţii noi
+167473 - trebuie o distanţă mai mare; testcomplex() sau doar nrsecţie şi nr alegători? sau chiar testdecalat() cu distanţă mare adresă 
+42682 - testdecalat() cu procent (mult?) mai mare
+20297 - testdecalat() cu procent (mult?) mai mare
+155243 - testcomplex() cu procent mai mare, eventual cu distanţă mai mare la adresă
+106318 - testdecalat() cu procentaj mult mai mare
+60419 - testcomplex() cu procentaj (mult) mai mare
+179169 - testcompplex() cu procentaj mai mare
+
+
+procent 0.015 - 3422 negăsite
+procent 0.050 - 2752 negăsite
+
