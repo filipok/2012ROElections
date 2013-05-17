@@ -105,7 +105,7 @@ rm(statistica.sectii)
 distanta <- 0.3
 distanta2 <- 0.4
 distanta3 <- 0.5
-procent <- 0.015
+procent <- 0.05
 
 #bucată de activat dacă folosim data.table
 # baza <- as.data.table(baza)
@@ -211,8 +211,10 @@ beep(10)
 # hist(log10(table(baza$siruta)+1))
 # #Distribuţia secţiilor negăsite
 vezi(statistica.sectii[order(-statistica.sectii$sectii.negasite),])
-vezi(baza[baza$siruta == 54975,])
-vezi(a.ref.work[a.ref.work$siruta == 54975,])
+
+siru <- 40198
+vezi(baza[baza$siruta == siru,])
+vezi(a.ref.work[a.ref.work$siruta == siru,])
 # hist(log10(statistica.sectii$sectii.negasite))
 # 
 #Compar secţiile din B/S3, să văd care e problema
