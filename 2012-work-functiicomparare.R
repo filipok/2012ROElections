@@ -8,10 +8,9 @@ testadresa <- function(lista1, lista2, distanta){
   for(n in 1:nrow(lista1)){ #pt fiecare secţie din localitate
     adresa.curenta <- lista1[n,8] #adresa secţiei curente
     if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
-      adresa.gasita <- agrep(adresa.curenta, lista2[,7], 
-                             value = TRUE, max.distance = distanta)
       indice.gasit <- agrep(adresa.curenta, lista2[,7], 
                             value = FALSE, max.distance = distanta)
+      adresa.gasita <- lista2[indice.gasit,7]
       if(length(adresa.gasita) == 1){ #iau doar răspunsurile unice (şi nenule)
         #completăm adresa, nr. secţiei şi nr. de alegători de la referendum
         lista1[n, 12] <- adresa.gasita
@@ -34,10 +33,9 @@ testadresaDT <- function(lista1, lista2, distanta){
   for(n in 1:nrow(lista1)){ #pt fiecare secţie din localitate
     adresa.curenta <- lista1[n,adresa.par] #adresa secţiei curente
     if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
-      adresa.gasita <- agrep(adresa.curenta, lista2[,adresa.ref], 
-                             value = TRUE, max.distance = distanta)
       indice.gasit <- agrep(adresa.curenta, lista2[,adresa.ref], 
                             value = FALSE, max.distance = distanta)
+      adresa.gasita <- lista2[indice.gasit, adresa.ref]
       if(length(adresa.gasita) == 1){ #iau doar răspunsurile unice (şi nenule)
         #completăm adresa, nr. secţiei şi nr. de alegători de la referendum
         set(lista1, n, 12L, adresa.gasita)
@@ -61,10 +59,9 @@ testadresaMT <- function(lista1, lista2, distanta){
   for(n in 1:nrow(lista1)){ #pt fiecare secţie din localitate
     adresa.curenta <- lista1[n,8] #adresa secţiei curente
     if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
-      adresa.gasita <- agrep(adresa.curenta, lista2[,7], 
-                             value = TRUE, max.distance = distanta)
       indice.gasit <- agrep(adresa.curenta, lista2[,7], 
                             value = FALSE, max.distance = distanta)
+      adresa.gasita <- lista2[indice.gasit,7]
       if(length(adresa.gasita) == 1){ #iau doar răspunsurile unice (şi nenule)
         #completăm adresa, nr. secţiei şi nr. de alegători de la referendum
         lista1[n, 12] <- adresa.gasita
@@ -88,10 +85,9 @@ testadresaSA <- function(listoi, distanta){
   for(n in 1:nrow(lista1)){ #pt fiecare secţie din localitate
     adresa.curenta <- lista1[n,8] #adresa secţiei curente
     if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
-      adresa.gasita <- agrep(adresa.curenta, lista2[,7], 
-                             value = TRUE, max.distance = distanta)
       indice.gasit <- agrep(adresa.curenta, lista2[,7], 
                             value = FALSE, max.distance = distanta)
+      adresa.gasita <- lista2[indice.gasit,7]
       if(length(adresa.gasita) == 1){ #iau doar răspunsurile unice (şi nenule)
         #completăm adresa, nr. secţiei şi nr. de alegători de la referendum
         lista1[n, 12] <- adresa.gasita
@@ -138,10 +134,9 @@ testcomplex <- function(lista1, lista2, distanta, procent){
       #Mai întâi caut secţii cu nume asemănător
       adresa.curenta <- lista1[n,8] #adresa secţiei curente
       if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
-        adresa.gasita <- agrep(adresa.curenta, lista2[,7], 
-                               value = TRUE, max.distance = distanta)
         indice.gasit <- agrep(adresa.curenta, lista2[,7], 
                               value = FALSE, max.distance = distanta)
+        adresa.gasita <- lista2[indice.gasit,7]
         #Acum avem un vector în indice.gasit
         #Iau doar răspunsurile nenule şi identice
         # şi găsesc înregistrarea unică cu nr. de secţie corespunzător
@@ -188,10 +183,9 @@ testcomplex2 <- function(lista1, lista2, distanta, procent){
       #Mai întâi caut secţii cu nume asemănător
       adresa.curenta <- lista1[n,8] #adresa secţiei curente
       if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
-        adresa.gasita <- agrep(adresa.curenta, lista2[,7], 
-                               value = TRUE, max.distance = distanta)
         indice.gasit <- agrep(adresa.curenta, lista2[,7], 
                               value = FALSE, max.distance = distanta)
+        adresa.gasita <- lista2[indice.gasit,7]
         #Acum avem un vector în indice.gasit
         #Iau doar răspunsurile nenule, dar nu neapărat identice
         if(length(adresa.gasita) > 0){
@@ -235,10 +229,9 @@ testdecalat <- function(lista1, lista2, distanta, procent){
     if(is.na(lista1[n, 11]) & nchar(lista1[n,8]) !=0){
       #Caut secţii cu nume asemănător
       adresa.curenta <- lista1[n,8] #adresa secţiei curente
-      adresa.gasita <- agrep(adresa.curenta, lista2[,7], 
-                             value = TRUE, max.distance = distanta)
       indice.gasit <- agrep(adresa.curenta, lista2[,7], 
                             value = FALSE, max.distance = distanta)
+      adresa.gasita <- lista2[indice.gasit,7]
       #Am vectori cu adrese şi indici adrese, caut înregistrarea unică, dacă e
       if(length(adresa.gasita) > 0 & length(unique(adresa.gasita)) == 1){
         numar.curenta <- lista1[n,5] #numar secţie parl
