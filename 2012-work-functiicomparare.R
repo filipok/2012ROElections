@@ -271,3 +271,55 @@ testdecalat <- function(lista1, lista2, distanta, procent){
   listoi[[2]] <- lista2
   listoi
 }
+
+testdecalat2 <- function(lista1, lista2, distanta, procent){
+  #Caut grupuri de secţii cu aceeaşi adresă, dar cu numere diferite, decalate
+  #Diferenţa faţă de testdecalat() e că nu e musai ca adresele găsite să fie
+  #unice (mai sunt typos).
+  for(n in 1:nrow(lista1)){
+    #testez că nu avem deja datele din lista2 şi că adresa nu e nulă (dă eroare)
+    if(is.na(lista1[n, 11]) & nchar(lista1[n,8]) !=0){
+      #Caut secţii cu nume asemănător
+      adresa.curenta <- lista1[n,8] #adresa secţiei curente
+      indice.gasit <- agrep(adresa.curenta, lista2[,7], 
+                            value = FALSE, max.distance = distanta)
+      adresa.gasita <- lista2[indice.gasit,7]
+      #Am vectori cu adrese şi indici adrese
+      if(length(adresa.gasita) > 0){
+        numar.curenta <- lista1[n,5] #numar secţie parl
+        #Verificăm că avem acelaşi număr de secţii pentru adresa din lista1 şi
+        #cea din lista 2
+        sectiipar <- nrow(lista1[lista1$adresa.par == adresa.curenta & is.na(lista1$SV.ref.echiv),])
+        sectiiref <- nrow(lista2[lista2$adresa.ref %in% unique(adresa.gasita),])
+        if(sectiipar == sectiiref & sectiipar != 0){ #pot fi egale cu zero?
+          #Avem acelaşi număr de secţii; vom presupune că ordinea e aceeaşi.
+          temporar <- as.data.frame(matrix(rep(NA, 3*sectiipar),sectiipar))
+          for(z in 1:sectiipar){
+            #testăm fiecare pereche de secţii lista1-lista2 în privinţa
+            #numărului de alegători
+            numar1 <- lista1[lista1$adresa.par == adresa.curenta & is.na(lista1$SV.ref.echiv),][z, 10]
+            numar2 <- lista2[lista2$adresa.ref %in% unique(adresa.gasita),][z, 9]
+            if(abs(numar2 / numar1 - 1) < procent){
+              #Putem introduce modificările. Adresa
+              temporar[z, 2] <- adresa.gasita[z]
+              #Numărul secţiei
+              temporar[z, 1] <- lista2[lista2$adresa.ref %in% unique(adresa.gasita),][z, 6]
+              #Numărul de alegători 
+              temporar[z, 3] <- numar2
+            }
+          }
+          #Acum copiem df temporar
+          lista1[lista1$adresa.par == adresa.curenta & is.na(lista1$SV.ref.echiv), 11:13] <- temporar
+          #Secţiile din lista2 alocate deja se scot din listă
+          #Atenţie, nu toate cu adresa gasita, ci doar alea selectate în FOR-ul de mai sus!
+          lista2[lista2$adresa.ref %in% unique(adresa.gasita),][!is.na(temporar$V1),] <- NA
+          lista2 <- lista2[!is.na(lista2$JUD),]            
+        }
+      }
+    }
+  }
+  listoi <- vector ("list", 2)
+  listoi[[1]] <- lista1
+  listoi[[2]] <- lista2
+  listoi
+}
