@@ -1,5 +1,5 @@
 library("R2HTML")
-library("data.table")
+#library("data.table")
 
 vezi = function (x) { 
   #de la Georgian
@@ -167,6 +167,43 @@ for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva t
   listoi <- testcomplex2(listapar[[i]], listaref[[i]], distanta, procent)
   listapar[[i]] <- listoi[[1]]
   listaref[[i]] <- listoi[[2]]
+  
+  #9. Căutăm secţii cu adresă asemănătoare, nr. identic, alegători +/-10%
+  listoi <- testcomplex(listapar[[i]], listaref[[i]], distanta, 0.1)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]
+  #10.Identific grupurile de secţii cu aceeaşi adresă, dar care
+  #nu au acelaşi număr, fiind decalate; acum procent = 10%
+  listoi <- testdecalat(listapar[[i]], listaref[[i]], distanta, 0.1)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]
+  #11.Identific grupurile de secţii cu aceeaşi adresă, dar care nu au acelaşi
+  #număr, fiind decalate; adresele găsite nu e musai să fie identice (typos)
+  listoi <- testdecalat2(listapar[[i]], listaref[[i]], distanta, procent)
+  listapar[[i]] <- listoi[[1]]
+  listaref[[i]] <- listoi[[2]]
+  #12. Teste speciale pentru codurile siruta cu cele mai multe secţii negăsite
+  if(listapar[[i]][1,3] == 54975){
+    listoi <- testdecalat2(listapar[[i]], listaref[[i]], distanta, 0.3)
+    listapar[[i]] <- listoi[[1]]
+    listaref[[i]] <- listoi[[2]]
+  }
+  if(listapar[[i]][1,3] %in% c(95060, 155243, 60419, 179169)){
+    listoi <- testcomplex(listapar[[i]], listaref[[i]], distanta, 0.3)
+    listapar[[i]] <- listoi[[1]]
+    listaref[[i]] <- listoi[[2]]  
+  }
+  if(listapar[[i]][1,3] %in% c(40198, 9262, 143450, 114319, 42682, 20297, 106318)){
+    listoi <- testdecalat(listapar[[i]], listaref[[i]], distanta, 0.3)
+    listapar[[i]] <- listoi[[1]]
+    listaref[[i]] <- listoi[[2]]  
+  }
+  if(listapar[[i]][1,3] %in% c(130534, 13169, 167473)){
+    listoi <- testdecalat(listapar[[i]], listaref[[i]], 0.5, procent)
+    listapar[[i]] <- listoi[[1]]
+    listaref[[i]] <- listoi[[2]]
+  }
+  
 }
 
 close(pb)
@@ -212,7 +249,7 @@ beep(10)
 # #Distribuţia secţiilor negăsite
 vezi(statistica.sectii[order(-statistica.sectii$sectii.negasite),])
 
-siru <- 40198
+siru <- 54975
 vezi(baza[baza$siruta == siru,])
 vezi(a.ref.work[a.ref.work$siruta == siru,])
 # hist(log10(statistica.sectii$sectii.negasite))
