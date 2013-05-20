@@ -1,4 +1,8 @@
 179196 - aici am blocuri de secţii cu acelaşi nr, procent ok, dar denumiri schimbate; de făcut funcţie nouă!
 26564 - ar trebui rulat testdecalat(), dar cu adrese asemănătoare, atât în par, cât şi în ref... hm.
 
+sunt vreo 270 de secţii cu doar una negăsită; de studiat...
+
+xlsReadWrite() a fost scoasă din CRAN
+
 
