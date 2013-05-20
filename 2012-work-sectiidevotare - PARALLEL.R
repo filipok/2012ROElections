@@ -88,8 +88,11 @@ a.ref <- a.ref[a.ref$JUD != 43,]
 
 #Urmează verificările propriu-zise
 #Folosesc ca bază parlamentarele, am cele mai multe secţii în RO
-
+timpi <- rep(NA, 6)
+for(nuclee in 1:6){
 timp1<- Sys.time()
+library(foreach)
+library(doParallel)
 baza <- a.par
 a.ref.work <- a.ref
 coloane <- matrix(rep(NA, 18456 * 3), ncol = 3)
@@ -100,7 +103,7 @@ baza[,11] <- as.integer(NA)
 baza[,12] <- as.character(NA)
 baza[,13] <- as.integer(NA)
 
-rm(statss)
+rm(statistica.sectii)
 #coeficienţii pentru căutare
 distanta <- 0.3
 distanta2 <- 0.4
@@ -118,7 +121,9 @@ listaref <- split(a.ref.work, a.ref.work$siruta)
 timp3<- Sys.time()
 pb <- txtProgressBar(min = 0, max = length(unique(a.par$siruta)), style = 3)
 source("2012-work-functiicomparare.R") #încărcăm funcţiile apelate în loop
-for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva teste
+cl <- makeCluster(nuclee)
+registerDoParallel(cl)
+listache <- foreach(i = 1:length(unique(a.par$siruta))) %dopar% { #pt fiecare localitate facem câteva teste
   setTxtProgressBar(pb, i)
   #1. Acum testăm în funcţie de adresă
   listoi <- testadresa(listapar[[i]], listaref[[i]], distanta)
@@ -161,12 +166,15 @@ for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva t
   if(listapar[[i]][1,3] %in% c(130534, 13169, 167473)){
     listoi <- testdecalat(listoi[[1]], listoi[[2]], 0.5, procent)
   }
-  listapar[[i]] <- listoi[[1]]
-  listaref[[i]] <- listoi[[2]]
 }
 
 close(pb)
 timp4<- Sys.time()
+
+for(i in 1:length(unique(a.par$siruta))){
+  listapar[[i]] <- listache[[i]][[1]]
+  listaref[[i]] <- listache[[i]][[2]]
+}
 
 baza <- do.call("rbind", listapar)
 a.ref.work <- do.call("rbind", listaref)
@@ -180,37 +188,33 @@ gasite <- as.data.frame(gasite)
 gasite$gasite <- as.numeric(gasite$gasite)-1
 agregare <- aggregate(gasite$gasite, by = list(gasite$V1), sum)
 colnames(agregare) <- c("siruta", "sectii.gasite")
-colnames(numar.sectii) <- c("siruta", "existpar")
-statss <- merge(numar.sectii, agregare)
+colnames(numar.sectii) <- c("siruta", "sectii.existente")
+statistica.sectii <- merge(numar.sectii, agregare)
 rm(numar.sectii, agregare, gasite)
-statss$procentaj <- statss$sectii.gasite/statss$existpar
-statss$nepar <- statss$existpar - statss$sectii.gasite
-statss <- merge(statss, table(a.ref.work[,4]), by.x = "siruta", by.y = "Var1")
-colnames(statss)[6] <- "neref"
-View(statss[order(-statss$nepar),])
-vezi(with(statss, table(nepar, neref)))
-vezi(statss[statss$nepar == 1 & statss$neref == 1,])
-vezi(statss[statss$nepar == 2 & statss$neref == 2,])
+statistica.sectii$procentaj <- statistica.sectii$sectii.gasite/statistica.sectii$sectii.existente
+statistica.sectii$sectii.negasite <- statistica.sectii$sectii.existente - statistica.sectii$sectii.gasite
+View(statistica.sectii[order(-statistica.sectii$sectii.negasite),])
 
-print(paste("mai am", sum(statss$nepar), "secţii negăsite"))
+print(paste("mai am", sum(statistica.sectii$sectii.negasite), "secţii negăsite"))
 timp2 <- Sys.time()
 print(paste("a durat", timp2 - timp1, "minute, din care loop-ul", timp4 - timp3))
-beep(10)
-
+beep(3)
+timpi[nuclee] <- timp2 - timp1
+}
 #rezultate proaste avem, în mod previzibil, în localităţile cu multe secţii
 # #dar sunt şi secţii mici fără rezultate bune
-# plot(statss$existpar, statss$procentaj)
-# plot(log10(statss$existpar)+1, statss$procentaj)
+# plot(statistica.sectii$sectii.existente, statistica.sectii$procentaj)
+# plot(log10(statistica.sectii$sectii.existente)+1, statistica.sectii$procentaj)
 # #Alea unde a găsit una din două!
-# View(statss[statss$existpar == 2 & statss$procentaj == 0.5,])
+# View(statistica.sectii[statistica.sectii$sectii.existente == 2 & statistica.sectii$procentaj == 0.5,])
 # #Distribuţia localităţilor după nr. de secţii (log10)
 # hist(log10(table(baza$siruta)+1))
 # #Distribuţia secţiilor negăsite
-vezi(statss[order(-statss$nepar),])
+vezi(statistica.sectii[order(-statistica.sectii$sectii.negasite),])
 
-siru <- 99780
+siru <- 54975
 vezi(baza[baza$siruta == siru,])
 vezi(a.ref.work[a.ref.work$siruta == siru,])
-# hist(log10(statss$nepar))
+# hist(log10(statistica.sectii$sectii.negasite))
 
 #rm(contor, count, n, numar, s, adresa.curenta, adresa.gasita, indice.gasit, baza)
