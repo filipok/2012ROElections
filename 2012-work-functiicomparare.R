@@ -21,10 +21,10 @@ testadresa <- function(lista1, lista2, distanta){
       }
     }
   }
-  listoi <- vector ("list", 2)
-  listoi[[1]] <- lista1
-  listoi[[2]] <- lista2
-  listoi
+  dubla <- vector ("list", 2)
+  dubla[[1]] <- lista1
+  dubla[[2]] <- lista2
+  dubla
 }
 
 
@@ -46,10 +46,10 @@ testadresaDT <- function(lista1, lista2, distanta){
       }
     }
   }
-  listoi <- vector ("list", 2)
-  listoi[[1]] <- lista1
-  listoi[[2]] <- lista2
-  listoi
+  dubla <- vector ("list", 2)
+  dubla[[1]] <- lista1
+  dubla[[2]] <- lista2
+  dubla
 }
 
 testadresaMT <- function(lista1, lista2, distanta){
@@ -72,16 +72,16 @@ testadresaMT <- function(lista1, lista2, distanta){
       }
     }
   }
-  listoi <- vector ("list", 2)
-  listoi[[1]] <- lista1
-  listoi[[2]] <- lista2
-  listoi
+  dubla <- vector ("list", 2)
+  dubla[[1]] <- lista1
+  dubla[[2]] <- lista2
+  dubla
 }
 
-testadresaSA <- function(listoi, distanta){
+testadresaSA <- function(dubla, distanta){
   #funcţie de testare pe baza adresei
-  lista1 <- listoi[[1]]
-  lista2 <- listoi[[2]]
+  lista1 <- dubla[[1]]
+  lista2 <- dubla[[2]]
   for(n in 1:nrow(lista1)){ #pt fiecare secţie din localitate
     adresa.curenta <- lista1[n,8] #adresa secţiei curente
     if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
@@ -98,10 +98,10 @@ testadresaSA <- function(listoi, distanta){
       }
     }
   }
-  listoi <- vector ("list", 2)
-  listoi[[1]] <- lista1
-  listoi[[2]] <- lista2
-  listoi
+  dubla <- vector ("list", 2)
+  dubla[[1]] <- lista1
+  dubla[[2]] <- lista2
+  dubla
 }
 
 testnraleg <- function(lista1, lista2){
@@ -121,10 +121,10 @@ testnraleg <- function(lista1, lista2){
       }
     }
   }
-  listoi <- vector ("list", 2)
-  listoi[[1]] <- lista1
-  listoi[[2]] <- lista2
-  listoi
+  dubla <- vector ("list", 2)
+  dubla[[1]] <- lista1
+  dubla[[2]] <- lista2
+  dubla
 }
 
 testcomplex <- function(lista1, lista2, distanta, procent){
@@ -168,10 +168,10 @@ testcomplex <- function(lista1, lista2, distanta, procent){
       }
     }
   }
-  listoi <- vector ("list", 2)
-  listoi[[1]] <- lista1
-  listoi[[2]] <- lista2
-  listoi
+  dubla <- vector ("list", 2)
+  dubla[[1]] <- lista1
+  dubla[[2]] <- lista2
+  dubla
 }
 
 testcomplex2 <- function(lista1, lista2, distanta, procent){
@@ -216,10 +216,10 @@ testcomplex2 <- function(lista1, lista2, distanta, procent){
       }
     }
   }
-  listoi <- vector ("list", 2)
-  listoi[[1]] <- lista1
-  listoi[[2]] <- lista2
-  listoi
+  dubla <- vector ("list", 2)
+  dubla[[1]] <- lista1
+  dubla[[2]] <- lista2
+  dubla
 }
 
 testdecalat <- function(lista1, lista2, distanta, procent){
@@ -266,10 +266,10 @@ testdecalat <- function(lista1, lista2, distanta, procent){
       }
     }
   }
-  listoi <- vector ("list", 2)
-  listoi[[1]] <- lista1
-  listoi[[2]] <- lista2
-  listoi
+  dubla <- vector ("list", 2)
+  dubla[[1]] <- lista1
+  dubla[[2]] <- lista2
+  dubla
 }
 
 testdecalat2 <- function(lista1, lista2, distanta, procent){
@@ -318,8 +318,8 @@ testdecalat2 <- function(lista1, lista2, distanta, procent){
       }
     }
   }
-  listoi <- vector ("list", 2)
-  listoi[[1]] <- lista1
-  listoi[[2]] <- lista2
-  listoi
+  dubla <- vector ("list", 2)
+  dubla[[1]] <- lista1
+  dubla[[2]] <- lista2
+  dubla
 }
