@@ -161,6 +161,13 @@ for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva t
   if(listapar[[i]][1,3] %in% c(130534, 13169, 167473)){
     listoi <- testdecalat(listoi[[1]], listoi[[2]], 0.5, procent)
   }
+  
+  #13. Test special pentru cele cu mai puţin de 10 negăsite, unde numărul de
+  #secţii negăsite de la lista1 e acelaşi cu cel de la lista2
+  if(nrow(listoi[[2]]) < 11 & nrow(listoi[[2]]) == nrow(listoi[[1]][is.na(listoi[[1]]$Adresa.ref.echiv),])){
+    listoi <- testdecalat(listoi[[1]], listoi[[2]], 0.5, 0.3)
+  }
+  
   listapar[[i]] <- listoi[[1]]
   listaref[[i]] <- listoi[[2]]
 }
@@ -188,14 +195,19 @@ statss$nepar <- statss$existpar - statss$sectii.gasite
 statss <- merge(statss, table(a.ref.work[,4]), by.x = "siruta", by.y = "Var1")
 colnames(statss)[6] <- "neref"
 View(statss[order(-statss$nepar),])
-vezi(with(statss, table(nepar, neref)))
-vezi(statss[statss$nepar == 1 & statss$neref == 1,])
-vezi(statss[statss$nepar == 2 & statss$neref == 2,])
+
 
 print(paste("mai am", sum(statss$nepar), "secţii negăsite"))
 timp2 <- Sys.time()
 print(paste("a durat", timp2 - timp1, "minute, din care loop-ul", timp4 - timp3))
 beep(10)
+
+vezi(with(statss, table(nepar, neref)))
+vezi(statss[statss$nepar == 1 & statss$neref == 1,])
+vezi(statss[statss$nepar == 2 & statss$neref == 2,])
+vezi(statss[statss$nepar == 3 & statss$neref == 3,])
+vezi(statss[statss$nepar == 4 & statss$neref == 4,])
+
 
 #rezultate proaste avem, în mod previzibil, în localităţile cu multe secţii
 # #dar sunt şi secţii mici fără rezultate bune
@@ -208,7 +220,7 @@ beep(10)
 # #Distribuţia secţiilor negăsite
 vezi(statss[order(-statss$nepar),])
 
-siru <- 99780
+siru <- 40198
 vezi(baza[baza$siruta == siru,])
 vezi(a.ref.work[a.ref.work$siruta == siru,])
 # hist(log10(statss$nepar))
