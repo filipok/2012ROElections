@@ -123,10 +123,10 @@ for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva t
   #1. Acum testăm în funcţie de adresă
   listoi <- testadresa(listapar[[i]], listaref[[i]], distanta)
   #2. Acum testăm în funcţie de numărul de alegători
-  listoi <- testnraleg(listoi[[1]], listoi[[2]])
+  listoi <- testnraleg(listoi[[1]], listoi[[2]], procent)
   #3. Acum testăm iar în funcţie de adresă,cu un coeficient de distanţă mai mare
   listoi <- testadresa(listoi[[1]], listoi[[2]], distanta2)
-  #4. Acum căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
+  #4. Acum căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-5%
   listoi <- testcomplex(listoi[[1]], listoi[[2]], distanta, procent)
   #5. Mai rulez încă o dată, cu distanta2=0.4
   listoi <- testcomplex(listoi[[1]], listoi[[2]], distanta2, procent)
@@ -135,7 +135,7 @@ for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva t
   listoi <- testdecalat(listoi[[1]], listoi[[2]], distanta, procent)
   #7.Mai rulez încă o dată punctul #6 cu distanta = 0.2
   listoi <- testdecalat(listoi[[1]], listoi[[2]], 0.2, procent)
-  #8. Căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
+  #8. Căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/5%
   #(diferenţa faţă de cealaltă funcţie testcomplex e că nu cere ca adresele
   #găsite să fie identice, existând mici typos uneori)
   listoi <- testcomplex2(listoi[[1]], listoi[[2]], distanta, procent)
