@@ -220,7 +220,7 @@ vezi(statss[statss$nepar == 4 & statss$neref == 4,])
 # #Distribuţia secţiilor negăsite
 vezi(statss[order(-statss$nepar),])
 
-siru <- 40198
+siru <- 102945
 vezi(baza[baza$siruta == siru,])
 vezi(a.ref.work[a.ref.work$siruta == siru,])
 # hist(log10(statss$nepar))
