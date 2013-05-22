@@ -1,17 +1,17 @@
 #În acest fişier sunt funcţiile de comparare a secţiilor de la parlamentare,
 #referendum şi locale 2012. Sunt apelate în 2012-work-sectiidevotare.R.
 
-testadresa <- function(lista1, lista2, distanta){
+testadresa <- function(lista1, lista2, dista){
   #funcţie de testare pe baza adresei
   for(n in 1:nrow(lista1)){ #pt fiecare secţie din localitate
     adresa.curenta <- lista1[n,8] #adresa secţiei curente
     if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
       indice.gasit <- agrep(adresa.curenta, lista2[,7], 
-                            value = FALSE, max.distance = distanta)
+                            value = FALSE, max.distance = dista)
       adresa.gasita <- lista2[indice.gasit,7]
       #iau doar răspunsurile unice (şi nenule) şi testez dif. nr. alegători 
       if(length(adresa.gasita) == 1){ 
-        if(abs((lista2[indice.gasit, 9] / lista1[n,10]) - 1) < 0.5){
+        if(abs((lista2[indice.gasit, 9] / lista1[n,10]) - 1) < 0.25){
           #completăm adresa, nr. secţiei şi nr. de alegători de la referendum
           lista1[n, 12] <- adresa.gasita
           lista1[n, 11] <- lista2[,6][indice.gasit]
@@ -29,7 +29,7 @@ testadresa <- function(lista1, lista2, distanta){
 }
 
 
-testnraleg <- function(lista1, lista2){
+testnraleg <- function(lista1, lista2, proc){
   #funcţie de testare pe baza numărului de alegători
   if(nrow(lista1) < 20){
     for(n in 1:nrow(lista1)){
@@ -37,7 +37,7 @@ testnraleg <- function(lista1, lista2){
         numar.curent <- lista1[n, 10]
         vector.numere.ref <- lista2[,9]
         vector.numere.ref <- abs((vector.numere.ref/numar.curent)-1)
-        if (sum(vector.numere.ref < procent) == 1){ #condiţie suplimentară, să fie unul singur
+        if (sum(vector.numere.ref < proc) == 1){ #condiţie suplimentară, să fie unul singur
           #Alocăm valoarea ce corespunde înregistrării cu diferenţă minimă - min(vector.numere.ref)
           lista1[n,11:13] <- lista2[,c(6,7,9)][which(vector.numere.ref == min(vector.numere.ref)),]
           #Secţia din a.ref alocată deja se scoate din listă
@@ -52,7 +52,7 @@ testnraleg <- function(lista1, lista2){
   dubla
 }
 
-testcomplex <- function(lista1, lista2, distanta, procent){
+testcomplex <- function(lista1, lista2, dista, proc){
   #Căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5%
   for(n in 1:nrow(lista1)){
     if(is.na(lista1[n, 11])){
@@ -60,7 +60,7 @@ testcomplex <- function(lista1, lista2, distanta, procent){
       adresa.curenta <- lista1[n,8] #adresa secţiei curente
       if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
         indice.gasit <- agrep(adresa.curenta, lista2[,7], 
-                              value = FALSE, max.distance = distanta)
+                              value = FALSE, max.distance = dista)
         adresa.gasita <- lista2[indice.gasit,7]
         #Acum avem un vector în indice.gasit
         #Iau doar răspunsurile nenule şi identice
@@ -76,7 +76,7 @@ testcomplex <- function(lista1, lista2, distanta, procent){
             #Iar următorul IF verifică dacă numărul de alegători e stabil
             #de la parlamentare la referendum
             if(abs((lista2[lista2$SV.ref == 
-                             numar.curenta, 9] / lista1[n,10])- 1) < procent){
+                             numar.curenta, 9] / lista1[n,10])- 1) < proc){
               #Acum scriem echivalenţele
               #vectorul adresa.gasita e cu chestii identice şi aplicăm (unique)
               lista1[n, 12] <- unique(adresa.gasita) 
@@ -99,7 +99,7 @@ testcomplex <- function(lista1, lista2, distanta, procent){
   dubla
 }
 
-testcomplex2 <- function(lista1, lista2, distanta, procent){
+testcomplex2 <- function(lista1, lista2, dista, proc){
   #Căutăm secţii cu adresă asemănătoare, nr. identic şi alegători +/-1.5% 
   #Diferenţa faţă de funcţia testcomplex e că nu e musai ca adresele găsite să
   #fie identice (mai sunt erori de ortografie).
@@ -109,7 +109,7 @@ testcomplex2 <- function(lista1, lista2, distanta, procent){
       adresa.curenta <- lista1[n,8] #adresa secţiei curente
       if(nchar(adresa.curenta) !=0){ #unele adrese nu sunt deloc şi dădea eroare
         indice.gasit <- agrep(adresa.curenta, lista2[,7], 
-                              value = FALSE, max.distance = distanta)
+                              value = FALSE, max.distance = dista)
         adresa.gasita <- lista2[indice.gasit,7]
         #Acum avem un vector în indice.gasit
         #Iau doar răspunsurile nenule, dar nu neapărat identice
@@ -124,7 +124,7 @@ testcomplex2 <- function(lista1, lista2, distanta, procent){
             #Iar următorul IF verifică dacă numărul de alegători e stabil
             #de la parlamentare la referendum
             if(abs((lista2[lista2$SV.ref == 
-                             numar.curenta, 9] / lista1[n,10])- 1) < procent){
+                             numar.curenta, 9] / lista1[n,10])- 1) < proc){
               #Acum scriem echivalenţele
               #fiind acelaşi număr de secţie, scriem nr. de la parlamentare
               lista1[n, 11] <- lista1[n, 5] 
@@ -147,7 +147,7 @@ testcomplex2 <- function(lista1, lista2, distanta, procent){
   dubla
 }
 
-testdecalat <- function(lista1, lista2, distanta, procent){
+testdecalat <- function(lista1, lista2, dista, proc){
   #Caut grupuri de secţii cu aceeaşi adresă, dar cu numere diferite, decalate
   for(n in 1:nrow(lista1)){
     #testez că nu avem deja datele din lista2 şi că adresa nu e nulă (dă eroare)
@@ -155,7 +155,7 @@ testdecalat <- function(lista1, lista2, distanta, procent){
       #Caut secţii cu nume asemănător
       adresa.curenta <- lista1[n,8] #adresa secţiei curente
       indice.gasit <- agrep(adresa.curenta, lista2[,7], 
-                            value = FALSE, max.distance = distanta)
+                            value = FALSE, max.distance = dista)
       adresa.gasita <- lista2[indice.gasit,7]
       #Am vectori cu adrese şi indici adrese, caut înregistrarea unică, dacă e
       if(length(adresa.gasita) > 0 & length(unique(adresa.gasita)) == 1){
@@ -172,7 +172,7 @@ testdecalat <- function(lista1, lista2, distanta, procent){
             #numărului de alegători
             numar1 <- lista1[lista1$adresa.par == adresa.curenta & is.na(lista1$SV.ref.echiv),][z, 10]
             numar2 <- lista2[lista2$adresa.ref == unique(adresa.gasita),][z, 9]
-            if(abs(numar2 / numar1 - 1) < procent){
+            if(abs((numar2 / numar1) - 1) < proc){
               #Putem introduce modificările. Adresa
               temporar[z, 2] <- unique(adresa.gasita)
               #Numărul secţiei
@@ -197,7 +197,7 @@ testdecalat <- function(lista1, lista2, distanta, procent){
   dubla
 }
 
-testdecalat2 <- function(lista1, lista2, distanta, procent){
+testdecalat2 <- function(lista1, lista2, dista, proc){
   #Caut grupuri de secţii cu aceeaşi adresă, dar cu numere diferite, decalate
   #Diferenţa faţă de testdecalat() e că nu e musai ca adresele găsite să fie
   #unice (mai sunt typos).
@@ -207,7 +207,7 @@ testdecalat2 <- function(lista1, lista2, distanta, procent){
       #Caut secţii cu nume asemănător
       adresa.curenta <- lista1[n,8] #adresa secţiei curente
       indice.gasit <- agrep(adresa.curenta, lista2[,7], 
-                            value = FALSE, max.distance = distanta)
+                            value = FALSE, max.distance = dista)
       adresa.gasita <- lista2[indice.gasit,7]
       #Am vectori cu adrese şi indici adrese
       if(length(adresa.gasita) > 0){
@@ -224,7 +224,7 @@ testdecalat2 <- function(lista1, lista2, distanta, procent){
             #numărului de alegători
             numar1 <- lista1[lista1$adresa.par == adresa.curenta & is.na(lista1$SV.ref.echiv),][z, 10]
             numar2 <- lista2[lista2$adresa.ref %in% unique(adresa.gasita),][z, 9]
-            if(abs(numar2 / numar1 - 1) < procent){
+            if(abs((numar2 / numar1) - 1) < proc){
               #Putem introduce modificările. Adresa
               temporar[z, 2] <- adresa.gasita[z]
               #Numărul secţiei
