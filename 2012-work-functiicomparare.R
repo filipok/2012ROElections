@@ -1,5 +1,5 @@
 #În acest fişier sunt funcţiile de comparare a secţiilor de la parlamentare,
-#referendum şi locale 2012. Sunt apelate în 2012-work-sectiidevotare.R.
+#referendum şi locale 2012.
 
 testadresa <- function(lista1, lista2, dista){
   #funcţie de testare pe baza adresei
@@ -267,25 +267,23 @@ nrsecidentic <- function(lista1, lista2, maxim){
   dubla
 }
 
-corectare <- function(sir, s1old, s1new){
-  #mutare sectie s2 de la s1old la s1new
-  if(is.na(lista1[lista1$SV.par == s1new,11]) & 
-       !is.na(lista1[lista1$SV.par == s1old,11])){
-    lista1[lista1$SV.par == s1new,11:13] <- lista1[lista1$SV.par == s1old,11:13]
-    lista1[lista1$SV.par == s1old,11:13] <- NA
+corectare <- function(lista, sir, old, nou){
+  #mutare sectie s2 de la old la new
+  print(paste("corectare", sir, old, nou))
+  if(is.na(lista[lista$siruta == sir & lista$SV.par == nou,11]) & !is.na(lista[lista$siruta == sir & lista$SV.par == old,11])){
+    lista[lista$siruta == sir & lista$SV.par == nou,11:13] <- lista[lista$siruta == sir & lista$SV.par == old,11:13]
+    lista[lista$siruta == sir & lista$SV.par == old,11:13] <- NA
   }
-  dubla <- vector ("list", 2)
-  dubla[[1]] <- lista1
-  dubla[[2]] <- lista2
-  dubla
+  lista
 }
 
-completare <- function(sir, s1, s2){
+completare <- function(lista1, lista2, sir, s1, s2){
+  print(paste("completare", sir, s1, s2))
   #completare manuală secţie s2 în s1
-  if(is.na(lista1[lista1$SV.par == s1new, 11]) & 
-       !is.na(lista2[lista2$SV.ref == s2, 6])){
-    lista1[lista1$SV.par == s1new, 11:13] <- lista2[lista2$SV.ref == s2, c(6:7, 9)]
-    lista2 <- lista2[lista2$SV.ref != s2,]
+  if(is.na(lista1[lista1$siruta == sir & lista1$SV.par == s1, 11]) & !is.na(lista2[lista2$siruta == sir & lista2$SV.ref == s2, 6])){
+    lista1[lista1$siruta == sir & lista1$SV.par == s1, 11:13] <- lista2[lista2$siruta == sir & lista2$SV.ref == s2, c(6:7, 9)]
+    lista2[lista2$siruta == sir & lista2$SV.ref == s2, ] <- NA
+    lista2 <- lista2[!is.na(lista2$siruta),]
   }
   dubla <- vector ("list", 2)
   dubla[[1]] <- lista1
