@@ -1,22 +1,5 @@
-library("R2HTML")
-#library("data.table")
-
-vezi = function (x) { 
-  #de la Georgian
-  file.remove( 'test.html');
-  HTML(x, file='test.html', row.names=TRUE, innerBorder=1);
-  system(' "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" "C:\\Users\\Filip\\Dropbox\\R_Work\\2012AlegeriRomania\\test.html"  ', wait=FALSE )
-}
-
-beep <- function(n = 3){
-  #source: http://stackoverflow.com/questions/3365657/is-there-a-way-to-make-r-beep-play-a-sound-at-the-end-of-a-script
-  for(i in seq(n)){
-    system("rundll32 user32.dll,MessageBeep -1")
-    Sys.sleep(.5)
-  }
-}
-
 rm(list = ls(all = TRUE))
+source("2012-functiigenerale.R")
 #Apel cod pentru locale, referendum şi parlamentare
 source("2012-locale.R")
 source("2012-referendum.R")
@@ -91,7 +74,7 @@ a.ref <- a.ref[a.ref$JUD != 43,]
 
 timp1<- Sys.time()
 baza <- a.par
-a.ref.work <- a.ref
+arefwork <- a.ref
 coloane <- matrix(rep(NA, 18456 * 3), ncol = 3)
 baza <- cbind(baza, coloane)
 rm(coloane)
@@ -109,11 +92,11 @@ procent <- 0.05
 
 #bucată de activat dacă folosim data.table
 # baza <- as.data.table(baza)
-# a.ref.work <- as.data.table(a.ref.work)
+# arefwork <- as.data.table(arefwork)
 
 #splitare date pe siruta
 listapar <- split(baza, as.numeric(baza$siruta))
-listaref <- split(a.ref.work, a.ref.work$siruta)
+listaref <- split(arefwork, arefwork$siruta)
 
 timp3<- Sys.time()
 pb <- txtProgressBar(min = 0, max = length(unique(a.par$siruta)), style = 3)
@@ -161,13 +144,28 @@ for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva t
   if(listapar[[i]][1,3] %in% c(130534, 13169, 167473)){
     listoi <- testdecalat(listoi[[1]], listoi[[2]], 0.5, procent)
   }
-  
+  if(listapar[[i]][1,3] %in% c(197196, 20563, 106318, 114319, 159614, 60847, 
+                               139704, 1017, 130534)){
+    listoi <- testdecalat(listoi[[1]], listoi[[2]], 0.5, 0.5)
+  }
+  if(listapar[[i]][1, 3] %in% c(13169)){
+    listoi <- testdecalat(listoi[[1]], listoi[[2]], 0.7, procent)
+  }
+    
   #13. Test special pentru cele cu mai puţin de 10 negăsite, unde numărul de
   #secţii negăsite de la lista1 e acelaşi cu cel de la lista2
   if(nrow(listoi[[2]]) < 11 & nrow(listoi[[2]]) == nrow(listoi[[1]][is.na(listoi[[1]]$Adresa.ref.echiv),])){
     listoi <- testdecalat(listoi[[1]], listoi[[2]], 0.5, 0.3)
   }
   
+  #14. Teste speciale pentru cele cu 2 sau 3 negăsite; distanţă mică, fiindcă au
+  #nume asemănătoare
+  if(nrow(listoi[[2]]) %in% c(2, 3) & nrow(listoi[[2]]) == nrow(listoi[[1]][is.na(listoi[[1]]$Adresa.ref.echiv),])){
+    listoi <- testdecalat(listoi[[1]], listoi[[2]], 0.1, procent)
+  }
+  if(nrow(listoi[[2]]) %in% c(2, 3) & nrow(listoi[[2]]) == nrow(listoi[[1]][is.na(listoi[[1]]$Adresa.ref.echiv),])){
+    listoi <- testdecalat(listoi[[1]], listoi[[2]], 0.05, procent)
+  }
   listapar[[i]] <- listoi[[1]]
   listaref[[i]] <- listoi[[2]]
 }
@@ -176,7 +174,8 @@ close(pb)
 timp4<- Sys.time()
 
 baza <- do.call("rbind", listapar)
-a.ref.work <- do.call("rbind", listaref)
+arefwork <- do.call("rbind", listaref)
+rm(listapar, listaref)
 
 #analiză distribuţie secţii găsite (nu funcţionează cu data.tables)
 numar.sectii <- table(baza[, 3])
@@ -192,7 +191,7 @@ statss <- merge(numar.sectii, agregare)
 rm(numar.sectii, agregare, gasite)
 statss$procentaj <- statss$sectii.gasite/statss$existpar
 statss$nepar <- statss$existpar - statss$sectii.gasite
-statss <- merge(statss, table(a.ref.work[,4]), by.x = "siruta", by.y = "Var1")
+statss <- merge(statss, table(arefwork[,4]), by.x = "siruta", by.y = "Var1")
 colnames(statss)[6] <- "neref"
 View(statss[order(-statss$nepar),])
 
@@ -208,6 +207,8 @@ vezi(statss[statss$nepar == 2 & statss$neref == 2,])
 vezi(statss[statss$nepar == 3 & statss$neref == 3,])
 vezi(statss[statss$nepar == 4 & statss$neref == 4,])
 
+vezi(statss[statss$nepar == 2 & statss$neref == 1,])
+vezi(statss[statss$nepar == 1 & statss$neref == 2,])
 
 #rezultate proaste avem, în mod previzibil, în localităţile cu multe secţii
 # #dar sunt şi secţii mici fără rezultate bune
@@ -220,9 +221,9 @@ vezi(statss[statss$nepar == 4 & statss$neref == 4,])
 # #Distribuţia secţiilor negăsite
 vezi(statss[order(-statss$nepar),])
 
-siru <- 102945
+siru <- 105570
 vezi(baza[baza$siruta == siru,])
-vezi(a.ref.work[a.ref.work$siruta == siru,])
+vezi(arefwork[arefwork$siruta == siru,])
 # hist(log10(statss$nepar))
 
 #rm(contor, count, n, numar, s, adresa.curenta, adresa.gasita, indice.gasit, baza)
