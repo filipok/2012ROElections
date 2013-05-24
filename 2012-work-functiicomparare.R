@@ -249,23 +249,23 @@ testdecalat2 <- function(lista1, lista2, dista, proc){
   dubla
 }
 
-nrsecidentic <- function(lista1, lista2, maxim){
-  #funcţie pentru numere de secţie identice verificate manual
-  #maxim e nr. de secţie maxim pentru care se face echivalare
-  for(n in 1:nrow(lista1)){
-    if(lista1[n,5] <= maxim){
-      lista1[n, 12] <- lista2[lista2$SV.ref == lista1[n,5],7] #adresa
-      lista1[n, 11] <- lista2[lista2$SV.ref == lista1[n,5],6] #SV
-      lista1[n, 13] <- lista2[lista2$SV.ref == lista1[n,5],9] #nr.aleg
-      #Secţia din a.ref alocată deja se scoate din listă
-      lista2 <- lista2[lista2$SV.ref != lista1[n,5],]
-    }
-  }
-  dubla <- vector ("list", 2)
-  dubla[[1]] <- lista1
-  dubla[[2]] <- lista2
-  dubla
-}
+# nrsecidentic <- function(lista1, lista2, maxim){
+#   #funcţie pentru numere de secţie identice verificate manual
+#   #maxim e nr. de secţie maxim pentru care se face echivalare
+#   for(n in 1:nrow(lista1)){
+#     if(lista1[n,5] <= maxim){
+#       lista1[n, 12] <- lista2[lista2$SV.ref == lista1[n,5],7] #adresa
+#       lista1[n, 11] <- lista2[lista2$SV.ref == lista1[n,5],6] #SV
+#       lista1[n, 13] <- lista2[lista2$SV.ref == lista1[n,5],9] #nr.aleg
+#       #Secţia din a.ref alocată deja se scoate din listă
+#       lista2 <- lista2[lista2$SV.ref != lista1[n,5],]
+#     }
+#   }
+#   dubla <- vector ("list", 2)
+#   dubla[[1]] <- lista1
+#   dubla[[2]] <- lista2
+#   dubla
+# }
 
 corectare <- function(lista, sir, old, nou){
   #mutare sectie s2 de la old la new
