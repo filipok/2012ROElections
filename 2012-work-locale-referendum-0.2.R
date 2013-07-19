@@ -1,31 +1,31 @@
 ################################################################################
 source("locale2012v1.0.R")
 ################################################################################
-cju.sv = Procente(SimpLocale2012(AbsolutSv(CJU, TRUE)))
-cju.circ = Procente(SimpLocale2012(CumulatCirc(CJU)))
-pri.circ = Procente(SimpLocale2012(AbsolutCirc(PRI, TRUE)))
-pri.circ.2 = TUR2[TUR2$TIPPV == 1,]
-pri.circ.2 = Procente(SimpLocale2012(AbsolutCirc(pri.circ.2, 
+cjuSv = Procente(SimpLocale2012(AbsolutSv(CJU, TRUE)))
+cjuCirc = Procente(SimpLocale2012(CumulatCirc(CJU)))
+priCirc = Procente(SimpLocale2012(AbsolutCirc(PRI, TRUE)))
+priCirc2 = TUR2[TUR2$TIPPV == 1,]
+priCirc2 = Procente(SimpLocale2012(AbsolutCirc(priCirc2, 
                                                   TRUE)))
-pri.circ.all = rbind(pri.circ, pri.circ.2)
+priCircAll = rbind(priCirc, priCirc2)
 
 ################################################################################
 source("2012-referendum-0.2.R")
 ################################################################################
 #coduri siruta aiurea
-ref.2012.circ.pro[ref.2012.circ.pro$DEN_CIRC_R == "PEŞTIŞANI","siruta"] = 81184
-ref.2012.circ.pro[ref.2012.circ.pro$DEN_CIRC_R == "BĂLĂNEŞTI","siruta"]= 78748
-ref.2012.circ.pro[ref.2012.circ.pro$DEN_CIRC_R == "BAIA DE FIER","siruta"] = 78711
+ref2012CircPro[ref2012CircPro$DEN_CIRC_R == "PEŞTIŞANI","siruta"] = 81184
+ref2012CircPro[ref2012CircPro$DEN_CIRC_R == "BĂLĂNEŞTI","siruta"]= 78748
+ref2012CircPro[ref2012CircPro$DEN_CIRC_R == "BAIA DE FIER","siruta"] = 78711
 
 ################################################################################
 #facem merge pentru a introduce câştigătorii primăriilor:
 ################################################################################
-referendum = merge(ref.2012.circ.pro, new.prim, all.x = TRUE)
+referendum = merge(ref2012CircPro, newPrim, all.x = TRUE)
 referendum$CODU = NULL
 ################################################################################
 #facem încă un merge cu rezultatele la primărie la localele din 2012
 ################################################################################
-referendum = merge(referendum, pri.circ.all, all.x = TRUE)
+referendum = merge(referendum, priCircAll, all.x = TRUE)
 
 ################################################################################
 source("siruta2008/siruta2008.R")
@@ -39,16 +39,16 @@ referendum = merge(referendum, siruta2008[siruta2008$RANG != "V" &
               by.x = "siruta", by.y = "SIRUTA_SUP", all.x = TRUE)
 #mai sunt unele puse aiurea la rang V, deşi ar trebui IV
 qqq = siruta2008[siruta2008$RANG == "V" & siruta2008$NAME == siruta2008$NAME_SUP,]
-backup.referendum = referendum
+backupReferendum = referendum
 #print(nrow(referendum[is.na(referendum$X),]))
-for(i in 1:nrow(backup.referendum[is.na(backup.referendum$X),])){
-  if (nrow(qqq[qqq$SIRUTA_SUP == backup.referendum[is.na(backup.referendum$X),][i,1], c(1, 2)])  ==  1){
+for(i in 1:nrow(backupReferendum[is.na(backupReferendum$X),])){
+  if (nrow(qqq[qqq$SIRUTA_SUP == backupReferendum[is.na(backupReferendum$X),][i,1], c(1, 2)])  ==  1){
     #print(i)
-    referendum[referendum$siruta == backup.referendum[is.na(backup.referendum$X),][i,1],c(46, 47)] = 
-      qqq[qqq$SIRUTA_SUP == backup.referendum[is.na(backup.referendum$X),][i,1], c(1, 2)]
+    referendum[referendum$siruta == backupReferendum[is.na(backupReferendum$X),][i,1],c(46, 47)] = 
+      qqq[qqq$SIRUTA_SUP == backupReferendum[is.na(backupReferendum$X),][i,1], c(1, 2)]
   }
 }
-rm(qqq, backup.referendum)
+rm(qqq, backupReferendum)
 #pus manual coordonatele geogragfice la unele care nu precizau care e satul reşedinţă al comunei (rang IV vs V)
 #sau care aveau probleme cu diacriticele
 referendum[referendum$siruta == 13891,c(46,47)] = siruta2008[siruta2008$SIRUTA == 13917, c(1,2)]

@@ -6,21 +6,21 @@ source("2012-referendum.R")
 source("2012-parlamentare.R")
 
 #Un data frame pentru fiecare listă de secţii de votare, incl. nr. de alegători
-a.loc = merge(nume.sec.loc.2012, 
-               aleg.loc.2012[c("DEN_JUD", "CIRC", 
+aLoc = merge(numeSecLoc2012, 
+               alegLoc2012[c("DEN_JUD", "CIRC", 
                                "SV", "Numar.alegatori")], 
                sort = FALSE)
-a.par = nume.sec.parl.2012
-a.ref = ref.2012.sv[1:9]
+aPar = numeSecParl2012
+aRef = ref2012Sv[1:9]
 
 #Şterg datele care nu-mi folosesc pe moment
-rm(CJU, CLO, PCJ, PRI, TUR2, aleg.loc.2012, cdep, cdep.circ, cdep.colegiu, 
-   cdep.judet, cdep.sv, echivalare.coduri, new.prim, nume.sec.loc.2012,
-   nume.sec.parl.2012, ref.2012.circ, ref.2012.circ.pro, ref.2012.jud,
-   ref.2012.jud.pro, ref.2012.nat, ref.2012.sv, ref.2012.sv.nat, 
-   ref.2012.sv.pro, sen, sen.circ, sen.colegiu, sen.judet, sen.sv, AbsolutCirc, 
+rm(CJU, CLO, PCJ, PRI, TUR2, alegLoc2012, cdep, cdepCirc, cdepColegiu, 
+   cdepJudet, cdepsSv, echivalareCoduri, newPrim, numeSecLoc2012,
+   numeSecParl2012, ref2012Circ, ref2012CircPro, ref2012Jud,
+   ref2012JudPro, ref2012Nat, ref2012Sv, ref2012SvNat, 
+   ref2012SvPro, sen, senCirc, senColegiu, senJudet, senSv, AbsolutCirc, 
    AbsolutJudet, AbsolutSv, CumulatCirc, CumulatColegiu, CumulatJudet, Procente,
-   Procente.Ref, SimpLocale2012, TransformTabel, TransformTabelParl)
+   ProcenteRef, SimpLocale2012, TransformTabel, TransformTabelParl)
 
 Ghilimele = function(x){
   x = gsub("„", "=",x)
@@ -42,39 +42,39 @@ Prelucrari = function(x){
 }
 
 #Prelucrari adresa
-a.par$Adresa.parl = Prelucrari(a.par$Adresa.parl)
-a.loc$adresa = Prelucrari(a.loc$adresa)
-a.ref$adresa = Prelucrari(a.ref$adresa)
+aPar$Adresa.parl = Prelucrari(aPar$Adresa.parl)
+aLoc$adresa = Prelucrari(aLoc$adresa)
+aRef$adresa = Prelucrari(aRef$adresa)
 
 #de individualizat coloanele SV şi adresa
-colnames(a.par)[5] = "SV.par"
-colnames(a.loc)[3] = "SV.loc"
-colnames(a.ref)[6] = "SV.ref"
-colnames(a.loc)[7] = "adresa.loc"
-colnames(a.par)[8] = "adresa.par"
-colnames(a.ref)[7] = "adresa.ref"
+colnames(aPar)[5] = "SV.par"
+colnames(aLoc)[3] = "SV.loc"
+colnames(aRef)[6] = "SV.ref"
+colnames(aLoc)[7] = "adresa.loc"
+colnames(aPar)[8] = "adresa.par"
+colnames(aRef)[7] = "adresa.ref"
 
 #Prelucrări DEN_CIRC
-a.par$DEN_CIRC = Prelucrari(a.par$DEN_CIRC)
-a.ref$DEN_CIRC_R = Prelucrari(a.ref$DEN_CIRC_R)
-a.loc$DEN_CIRC = Prelucrari(a.loc$DEN_CIRC)
+aPar$DEN_CIRC = Prelucrari(aPar$DEN_CIRC)
+aRef$DEN_CIRC_R = Prelucrari(aRef$DEN_CIRC_R)
+aLoc$DEN_CIRC = Prelucrari(aLoc$DEN_CIRC)
 
 #Modificări coduri Siruta
-a.ref[a.ref$siruta == 81193, "siruta"] = 81184
-a.ref[a.ref$siruta == 78766, "siruta"] = 78748
-a.ref[a.ref$siruta == 78720, "siruta"] = 78711
-a.ref[a.ref$siruta == 999, "siruta"] = 275
+aRef[aRef$siruta == 81193, "siruta"] = 81184
+aRef[aRef$siruta == 78766, "siruta"] = 78748
+aRef[aRef$siruta == 78720, "siruta"] = 78711
+aRef[aRef$siruta == 999, "siruta"] = 275
 
 #scoatem judeţul 43 din parlamentare şi referendum
-a.par = a.par[a.par$JUD != 43,]
-a.ref = a.ref[a.ref$JUD != 43,]
+aPar = aPar[aPar$JUD != 43,]
+aRef = aRef[aRef$JUD != 43,]
 
 #Urmează verificările propriu-zise
 #Folosesc ca bază parlamentarele, am cele mai multe secţii în RO
 
 timp1= Sys.time()
-baza = a.par
-arefwork = a.ref
+baza = aPar
+arefwork = aRef
 coloane = matrix(rep(NA, 18456 * 3), ncol = 3)
 baza = cbind(baza, coloane)
 rm(coloane)
@@ -99,9 +99,9 @@ listapar = split(baza, as.numeric(baza$siruta))
 listaref = split(arefwork, arefwork$siruta)
 
 timp3 = Sys.time()
-pb = txtProgressBar(min = 0, max = length(unique(a.par$siruta)), style = 3)
+pb = txtProgressBar(min = 0, max = length(unique(aPar$siruta)), style = 3)
 source("2012-work-functiicomparare.R") #încărcăm funcţiile apelate în loop
-for(i in 1:length(unique(a.par$siruta))){ #pt fiecare localitate facem câteva teste
+for(i in 1:length(unique(aPar$siruta))){ #pt fiecare localitate facem câteva teste
   setTxtProgressBar(pb, i)
   #1. Acum testăm în funcţie de adresă
   listoi = testadresa(listapar[[i]], listaref[[i]], distanta)
@@ -186,17 +186,17 @@ source("2012-par-ref-manual.R")
 
 
 #analiză distribuţie secţii găsite
-numar.sectii = table(baza[, 3])
-numar.sectii = as.data.frame(numar.sectii)
+numarSectii = table(baza[, 3])
+numarSectii = as.data.frame(numarSectii)
 gasite = !is.na(baza[, 11])
 gasite = cbind(baza[, 3], gasite)
 gasite = as.data.frame(gasite)
 gasite$gasite = as.numeric(gasite$gasite)-1
 agregare = aggregate(gasite$gasite, by = list(gasite$V1), sum)
 colnames(agregare) = c("siruta", "sectii.gasite")
-colnames(numar.sectii) = c("siruta", "existpar")
-statss = merge(numar.sectii, agregare)
-rm(numar.sectii, agregare, gasite)
+colnames(numarSectii) = c("siruta", "existpar")
+statss = merge(numarSectii, agregare)
+rm(numarSectii, agregare, gasite)
 statss$procentaj = statss$sectii.gasite/statss$existpar
 statss$nepar = statss$existpar - statss$sectii.gasite
 statss = merge(statss, table(arefwork[,4]), by.x = "siruta", by.y = "Var1")
