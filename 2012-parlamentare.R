@@ -4,11 +4,11 @@
 
 #Atenţie! Aici şterg tot ce e în memoria R.
 #rm(list = ls(all = TRUE))
-nume.sec.parl.2012 = read.csv("2012parlamentare/sv_bec.csv", sep = ";", 
+numeSecParl2012 = read.csv("2012parlamentare/sv_bec.csv", sep = ";", 
                                stringsAsFactors = FALSE)
-nume.sec.parl.2012 = nume.sec.parl.2012[nume.sec.parl.2012$'Nr..Crt' != "" & 
-  nume.sec.parl.2012$'Nr..Crt' != "TOTAL",]
-colnames(nume.sec.parl.2012)[2:8] = c("JUD", "siruta", "DEN_CIRC", "SV", 
+numeSecParl2012 = numeSecParl2012[numeSecParl2012$'Nr..Crt' != "" & 
+  numeSecParl2012$'Nr..Crt' != "TOTAL",]
+colnames(numeSecParl2012)[2:8] = c("JUD", "siruta", "DEN_CIRC", "SV", 
                                        "COL_CD", "COL_SE", "Adresa.parl")
 parlamentare2012 = 
   read.csv("2012parlamentare/RezultateNivelSectieParlamentare2012.csv", 
@@ -21,57 +21,57 @@ rm(parlamentare2012, camere)
 
 #în continuare definesc câteva funcţii pentru prelucrare
 #în principal, fac un reshape de la format long la wide
-TransformTabelParl = function (x, indep.agreg = FALSE){
+TransformTabelParl = function (x, indepAgreg = FALSE){
   #funcţie de transformare a datelor de la BEC în tabel de tip "wide"
   #1. creez baza tabelului cu datele de participare
-  tabel.transf = x[1:19]
-  tabel.transf = unique(tabel.transf)
+  tabelTransf = x[1:19]
+  tabelTransf = unique(tabelTransf)
   #2. fac tabel separat cu independenţii
-  work.indep = x[x$numeCompetitor == "NULL",] 
+  workIndep = x[x$numeCompetitor == "NULL",] 
   #3. fac tabel cu datele privind voturile partidelor (doar coloanele necesare)
-  work.partide = x[x$numeCompetitor != "NULL", 
+  workPartide = x[x$numeCompetitor != "NULL", 
                     c("JUD", "DEN_CIRC", "SV", "numeCompetitor", 
                       "VoturiCandidat")]
-  work.partide = reshape(work.partide, v.names = "VoturiCandidat", 
+  workPartide = reshape(workPartide, v.names = "VoturiCandidat", 
                           idvar = c("JUD", "DEN_CIRC", "SV"), 
                           timevar = "numeCompetitor", direction = "wide")
   #4. unesc tabel cu date  participare cu tabel cu voturi partide
-  tabel.transf = merge(tabel.transf, work.partide, all.x = TRUE, sort = FALSE)
-  rm(work.partide)
+  tabelTransf = merge(tabelTransf, workPartide, all.x = TRUE, sort = FALSE)
+  rm(workPartide)
   #5. acum trebuie să adăugăm una sau mai multe coloane pentru independenţi
   #avem două cazuri, cu sau fără agregare independenţi
-  if(indep.agreg == FALSE) {
+  if(indepAgreg == FALSE) {
     #numele coloanelor de independenţi: DEN_JUD + COLEGIU + NUME_CANDIDAT
-    indep.labels = apply(work.indep, 1, function(qqq) paste(qqq[2],"_", qqq[5], 
+    indepLabels = apply(workIndep, 1, function(qqq) paste(qqq[2],"_", qqq[5], 
                                                              "_", qqq[20], 
                                                              sep = ""))  
-    work.indep = cbind(work.indep, indep.labels)
-    work.indep = work.indep[, c("JUD", "SV", "VoturiCandidat", "indep.labels")]
-    work.indep = reshape(work.indep, v.names = "VoturiCandidat", 
-                          idvar = c("JUD", "SV"), timevar = "indep.labels", 
+    workIndep = cbind(workIndep, indepLabels)
+    workIndep = workIndep[, c("JUD", "SV", "VoturiCandidat", "indepLabels")]
+    workIndep = reshape(workIndep, v.names = "VoturiCandidat", 
+                          idvar = c("JUD", "SV"), timevar = "indepLabels", 
                           direction = "wide")
     #printăm număr independenţi, aşa, de verificare
-    indep.labels = unique(indep.labels)
-    print(paste("Avem", length(indep.labels), "independenti."))
+    indepLabels = unique(indepLabels)
+    print(paste("Avem", length(indepLabels), "independenti."))
   }
   else {
     #dacă vrem să agregăm independenţii
-    work.indep = aggregate(work.indep$VoturiCandidat, 
-                            by = list(work.indep$JUD, work.indep$SV), sum)
-    colnames(work.indep) = c("JUD", "SV","INDEPENDENTI")
+    workIndep = aggregate(workIndep$VoturiCandidat, 
+                            by = list(workIndep$JUD, workIndep$SV), sum)
+    colnames(workIndep) = c("JUD", "SV","INDEPENDENTI")
   }
   #unim tabelul de independenţi la tabelul general
-  tabel.transf = merge(tabel.transf, work.indep, sort = TRUE, all.x = TRUE)
-  rm(work.indep)
+  tabelTransf = merge(tabelTransf, workIndep, sort = TRUE, all.x = TRUE)
+  rm(workIndep)
   #6. finalizare
   #eliminăm "VoturiCandidat." din numele coloanelor
-  colnames(tabel.transf) = gsub("VoturiCandidat.", "", colnames(tabel.transf))
+  colnames(tabelTransf) = gsub("VoturiCandidat.", "", colnames(tabelTransf))
   #înlocuim NA cu zero
-  tabel.transf[is.na(tabel.transf)] = 0
+  tabelTransf[is.na(tabelTransf)] = 0
   #adăugăm adresa secţiei
-  tabel.transf = merge (tabel.transf, nume.sec.parl.2012[,c(2, 5, 8)], 
+  tabelTransf = merge (tabelTransf, numeSecParl2012[,c(2, 5, 8)], 
                          all.x = TRUE)
-  tabel.transf
+  tabelTransf
 }
 
 CumulatCirc = function(x){
@@ -107,17 +107,17 @@ CumulatJudet = function(x){
 
 #Producerea datelor pentru fiecare nivel (secţie, localitate, colegiu, judeţ)
 #date pe secţie de votare
-sen.sv = TransformTabelParl(sen)
-cdep.sv = TransformTabelParl(cdep)
+senSv = TransformTabelParl(sen)
+cdepSv = TransformTabelParl(cdep)
 #date pe localitate
-sen.circ = CumulatCirc(sen.sv)
-cdep.circ = CumulatCirc(cdep.sv)
+senCirc = CumulatCirc(senSv)
+cdepCirc = CumulatCirc(cdepSv)
 #date pe colegiu
-sen.colegiu = CumulatColegiu(sen.sv)
-cdep.colegiu = CumulatColegiu(cdep.sv)
+senColegiu = CumulatColegiu(senSv)
+cdepColegiu = CumulatColegiu(cdepSv)
 #date pe judeţ
-sen.judet = CumulatJudet(sen.sv)
-cdep.judet = CumulatJudet(cdep.sv)
+senJudet = CumulatJudet(senSv)
+cdepJudet = CumulatJudet(cdepSv)
 
 ######################################################
 #IMPORT SECTII DE VOTARE PARLAMENTARE 2012 DE LA ROAEP
@@ -128,30 +128,30 @@ library(xlsReadWrite) #Este necesară utilizarea pachetului xlsReadWrite
 lista = list.files("2012parlamentare\\SV_ROAEP\\judete") #A se schimba după caz
 judete = list()
 #Fişierele ROAEP sunt în general similare, dar mai apar diferenţe în privinţa
-#sheet-ului pe care sunt datele (sheet.ales) şi a rândului de la care încep
-#datele propriu-zise (rand.initial)
+#sheet-ului pe care sunt datele (sheetAles) şi a rândului de la care încep
+#datele propriu-zise (randInitial)
 for (i in lista){
-  rand.initial = 5
-  sheet.ales = 2
+  randInitial = 5
+  sheetAles = 2
   if (i == "ag_parlam_2012_v2.xls" | i == "ar_parlam2012_v7.xls" | 
     i == "hr_parlam2012_v2.xls") {
-    rand.initial = 3}
+    randInitial = 3}
   if (i == "ct_parlam_2012_final.xls" | i == "mm_parlam2012_v5.xls") {
-    rand.initial = 6}
+    randInitial = 6}
   if (i == "bn_parlam2012_v3.xls") {
-    rand.initial = 4}
+    randInitial = 4}
   if (i == "br_parlam2012_v2.xls" | i == "db_parlam2012_v3.xls" | 
     i == "sm_sectii_votare_v4.xls" | i == "tl_parlam2012_v1.xls") {
-    rand.initial = 2}
+    randInitial = 2}
   if (i == "mures_parlam_2012_modif.xls" | i == "sm_sectii_votare_v4.xls"){
-    sheet.ales = 3}
+    sheetAles = 3}
   if (i == "nt_parlam2012_v4.xls"){
-    sheet.ales = 1
-    rand.initial = 8}
+    sheetAles = 1
+    randInitial = 8}
   if (i == "tl_parlam2012_v1.xls"){
-    sheet.ales = 1}
+    sheetAles = 1}
   nume = paste ("2012parlamentare\\SV_ROAEP\\judete\\", i, sep = "")
-  judete[[i]] = read.xls(nume, sheet = sheet.ales, from = rand.initial, 
+  judete[[i]] = read.xls(nume, sheet = sheetAles, from = randInitial, 
                           stringsAsFactors = FALSE, colClasses = "character")
   if (i != "ct_parlam_2012_final.xls" & i != "vs_parlam2012_v3.xls"){
     judete[[i]] = judete[[i]][-1,]} #mai scoatem un rând în plus
@@ -598,9 +598,9 @@ romania = judete[[1]][c("JUD", "SV", "SirutaComp")]
 for (i in 2:42){
   romania = rbind(romania, judete[[i]][c("JUD", "SV", "SirutaComp")])
 }
-#Facem un JOIN între cdep.sv/sen.sv şi judete pentru codul Siruta
-cdep.sv = merge(cdep.sv, romania, all.x = TRUE)
-sen.sv = merge(sen.sv, romania, all.x = TRUE)
+#Facem un JOIN între cdepSv/senSv şi judete pentru codul Siruta
+cdepSv = merge(cdepSv, romania, all.x = TRUE)
+senSv = merge(senSv, romania, all.x = TRUE)
 
 ##################
 #Import Siruta2008
@@ -612,28 +612,28 @@ siruta2008 = read.csv("siruta2008/localitati2008_iso8859_2.csv", sep = ",",
 siruta2008[4] = sapply(siruta2008[4], function(qqq) strtrim(qqq,nchar(qqq)-1))
 
 #######################################################################
-#Facem JOIN-ul final între cdep.sv/sen.sv şi siruta2008 pentru lat/long
+#Facem JOIN-ul final între cdepSv/senSv şi siruta2008 pentru lat/long
 #######################################################################
 colnames(siruta2008)[4] = "SirutaComp" #pregătire nume coloană pentru merge
-cdep.sv = merge(cdep.sv, siruta2008[c("X", "Y", "SirutaComp")], all.x = TRUE, 
+cdepSv = merge(cdepSv, siruta2008[c("X", "Y", "SirutaComp")], all.x = TRUE, 
                  sort = FALSE)
-sen.sv = merge(sen.sv, siruta2008[c("X", "Y", "SirutaComp")], all.x = TRUE, 
+senSv = merge(senSv, siruta2008[c("X", "Y", "SirutaComp")], all.x = TRUE, 
                  sort = FALSE)
 #Verificări
-#print(table(cdep.sv[is.na(cdep.sv$X) & cdep.sv$JUD != 42 & 
-#                      cdep.sv$JUD != 43,]["DEN_JUD"]))
-#print(table(sen.sv[is.na(sen.sv$X) & cdep.sv$JUD != 42 & 
-#                       sen.sv$JUD != 43,]["DEN_JUD"]))
+#print(table(cdepSv[is.na(cdepSv$X) & cdepSv$JUD != 42 & 
+#                      cdepSv$JUD != 43,]["DEN_JUD"]))
+#print(table(senSv[is.na(senSv$X) & cdepSv$JUD != 42 & 
+#                       senSv$JUD != 43,]["DEN_JUD"]))
 #pdf("2012-parlamentare.pdf")
-#symbols(cdep.sv$X, cdep.sv$Y, 
-#        circles=sqrt(cdep.sv$NrAlegatoriPrezentatiLaUrne)/2000, inches=FALSE,
+#symbols(cdepSv$X, cdepSv$Y, 
+#        circles=sqrt(cdepSv$NrAlegatoriPrezentatiLaUrne)/2000, inches=FALSE,
 #        main="Romania", xlab="longitudine", ylab="latitudine", 
 #        bg = rgb(0,0,0,0.2), col = rgb(0,0,0,0.2))
 #dev.off()
 #
 #pdf("2012-parlamentare-judete.pdf")
-#for(judet in unique(cdep.sv$DEN_JUD[cdep.sv$DEN_JUD != "Strainatate (CE. 43)"])){
-#  attach(cdep.sv[cdep.sv$DEN_JUD == judet,])
+#for(judet in unique(cdepSv$DEN_JUD[cdepSv$DEN_JUD != "Strainatate (CE. 43)"])){
+#  attach(cdepSv[cdepSv$DEN_JUD == judet,])
 #  symbols(X, Y, circles=sqrt(NrAlegatoriPrezentatiLaUrne)/2000, inches=FALSE,
 #          main=paste("Judeţul", judet), 
 #          xlab="", ylab="", bg = rgb(0,0,0,0.2), col = rgb(0,0,0,0.2))
@@ -643,20 +643,20 @@ sen.sv = merge(sen.sv, siruta2008[c("X", "Y", "SirutaComp")], all.x = TRUE,
 #dev.off()
 
 #ştergem variabile temporare
-rm(romania, judete, i, k, lista, nume, rand.initial, sheet.ales)
+rm(romania, judete, i, k, lista, nume, randInitial, sheetAles)
 
 ###########
 #EXPORT CSV
 ###########
 #La nivel de secţie de votare, cu cod SIRUTA şi lat/long
-#write.table(x=cdep.sv, file="CSV/2012cdepsv.csv", row.names = FALSE)
-#write.table(x=sen.sv, file="CSV/2012sensv.csv", row.names = FALSE)
+#write.table(x=cdepSv, file="CSV/2012cdepsv.csv", row.names = FALSE)
+#write.table(x=senSv, file="CSV/2012sensv.csv", row.names = FALSE)
 #La nivel de oraş/comună
-#write.table(x=cdep.circ, file="CSV/2012cdepcirc.csv", row.names = FALSE)
-#write.table(x=sen.circ, file="CSV/2012sencirc.csv", row.names = FALSE)
+#write.table(x=cdepCirc, file="CSV/2012cdepcirc.csv", row.names = FALSE)
+#write.table(x=senCirc, file="CSV/2012sencirc.csv", row.names = FALSE)
 #La nivel de colegiu
-#write.table(x=cdep.colegiu, file="CSV/2012cdepcolegiu.csv", row.names = FALSE)
-#write.table(x=sen.colegiu, file="CSV/2012sencolegiu.csv", row.names = FALSE)
+#write.table(x=cdepColegiu, file="CSV/2012cdepcolegiu.csv", row.names = FALSE)
+#write.table(x=senColegiu, file="CSV/2012sencolegiu.csv", row.names = FALSE)
 #La nivel de judeţ
-#write.table(x=cdep.judet, file="CSV/2012cdepjudet.csv", row.names = FALSE)
-#write.table(x=sen.judet, file="CSV/2012senjudet.csv", row.names = FALSE)
+#write.table(x=cdepJudet, file="CSV/2012cdepjudet.csv", row.names = FALSE)
+#write.table(x=senJudet, file="CSV/2012senjudet.csv", row.names = FALSE)
