@@ -4,7 +4,7 @@
 #este secţia unde este introdusă înregistrarea; la compa, prima cifră e siruta, 
 #a doua este numărul secţiei de la parlamentare, iar a treia este numărul
 #secţiei de la referendum
-corma <- matrix(c(103764, 154, 152,
+corma = matrix(c(103764, 154, 152,
                   119527, 519, 522,
                   122187, 235, 236,
                   122187, 238, 235,
@@ -21,7 +21,7 @@ corma <- matrix(c(103764, 154, 152,
                   45101, 152, 154,
                   50102, 402, 401
 ), ncol = 3, byrow = TRUE)
-compa <- matrix(c(103764, 154, 153,
+compa = matrix(c(103764, 154, 153,
                   108473, 349, 322,
                   109504, 426, 395,
                   115389, 256, 244,
@@ -96,18 +96,18 @@ compa <- matrix(c(103764, 154, 153,
 ), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
   print(i)
-  baza <- corectare(baza, corma[i,1],corma[i,2],corma[i,3])
+  baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
-  listoi <- completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
-  baza <- listoi[[1]]
-  arefwork <-listoi[[2]]
+  listoi = completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
+  baza = listoi[[1]]
+  arefwork = listoi[[2]]
 }
 
 #completări manuale acolo unde lipsesc câte 2 secţii; ultimele 3 modificări de
 #la compa sunt un pic forţate, sunt diferenţe destul de mari la numărul de
 #alegători
-corma <- matrix(c(121652, 195, 196,
+corma = matrix(c(121652, 195, 196,
                   137069, 144, 147,
                   142426, 252, 253,
                   163002, 206, 208,
@@ -116,7 +116,7 @@ corma <- matrix(c(121652, 195, 196,
                   75766, 247, 245,
                   76255, 295, 297,
                   85840, 246, 248), ncol = 3, byrow = TRUE)
-compa <- matrix(c(105570, 215, 209,
+compa = matrix(c(105570, 215, 209,
                   105570, 216, 210,
                   10827, 261, 253,
                   10827, 262, 254,
@@ -328,16 +328,16 @@ compa <- matrix(c(105570, 215, 209,
                   168452, 118, 120), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
   print(i)
-  baza <- corectare(baza, corma[i,1],corma[i,2],corma[i,3])
+  baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
-  listoi <- completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
-  baza <- listoi[[1]]
-  arefwork <-listoi[[2]]
+  listoi = completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
+  baza = listoi[[1]]
+  arefwork = listoi[[2]]
 }
 
 #completări manuale acolo unde lipsesc câte 3 secţii
-corma <- matrix(c(124849, 457, 459,
+corma = matrix(c(124849, 457, 459,
                   97919,505, 509,
                   97919, 510, 505,
                   97919, 507, 510,
@@ -345,7 +345,7 @@ corma <- matrix(c(124849, 457, 459,
                   97919, 508, 512,
                   97919, 506, 508,
                   98685, 558, 561), ncol = 3, byrow = TRUE)
-compa <- matrix(c(119331, 189, 180,
+compa = matrix(c(119331, 189, 180,
                   119331, 190, 181,
                   119331, 191,182,
                   121297, 165, 167,
@@ -419,18 +419,18 @@ compa <- matrix(c(119331, 189, 180,
                   98998, 598, 598), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
   print(i)
-  baza <- corectare(baza, corma[i,1],corma[i,2],corma[i,3])
+  baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
-  listoi <- completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
-  baza <- listoi[[1]]
-  arefwork <-listoi[[2]]
+  listoi = completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
+  baza = listoi[[1]]
+  arefwork = listoi[[2]]
 }
 
 #completări manuale acolo unde lipsesc câte 4 secţii
-corma <- matrix(c(87077, 234, 229,
+corma = matrix(c(87077, 234, 229,
                   90538, 423, 427), ncol = 3, byrow = TRUE)
-compa <- matrix(c(100004, 692, 695,
+compa = matrix(c(100004, 692, 695,
                   100004, 693, 694,
                   100004, 694, 691,
                   100004, 695, 693,
@@ -508,19 +508,19 @@ compa <- matrix(c(100004, 692, 695,
                   97606, 483, 483), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
   print(i)
-  baza <- corectare(baza, corma[i,1],corma[i,2],corma[i,3])
+  baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
-  listoi <- completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
-  baza <- listoi[[1]]
-  arefwork <-listoi[[2]]
+  listoi = completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
+  baza = listoi[[1]]
+  arefwork = listoi[[2]]
 }
 
 #completări manuale acolo unde lipsesc câte 5 secţii
-corma <- matrix(c(120860, 114, 106,
+corma = matrix(c(120860, 114, 106,
                   120860, 115, 107,
                   143619, 117, 116), ncol = 3, byrow = TRUE)
-compa <- matrix(c(120860, 109, 109,
+compa = matrix(c(120860, 109, 109,
                   120860, 114, 114,
                   120860, 115, 115,
                   120860, 116, 116,
@@ -567,16 +567,16 @@ compa <- matrix(c(120860, 109, 109,
                   98505, 546, 546), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
   print(i)
-  baza <- corectare(baza, corma[i,1],corma[i,2],corma[i,3])
+  baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
-  listoi <- completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
-  baza <- listoi[[1]]
-  arefwork <-listoi[[2]]
+  listoi = completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
+  baza = listoi[[1]]
+  arefwork = listoi[[2]]
 }
 
 #completări manuale acolo unde lipsesc câte n secţii (n>5)
-corma <- matrix(c(179515, 46, 49,
+corma = matrix(c(179515, 46, 49,
                   179515, 47, 50,
                   179515, 53, 56,
                   100521, 48, 16,
@@ -587,7 +587,7 @@ corma <- matrix(c(179515, 46, 49,
                   26564, 94, 91,
                   26564, 141, 142,
                   54975, 136, 160), ncol = 3, byrow = TRUE)
-compa <- matrix(c(155350, 214, 214,
+compa = matrix(c(155350, 214, 214,
                   155350, 219, 219,
                   155350, 220, 220,
                   155350, 222, 222,
@@ -1030,10 +1030,10 @@ compa <- matrix(c(155350, 214, 214,
                   54975, 174, 151), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
   print(i)
-  baza <- corectare(baza, corma[i,1],corma[i,2],corma[i,3])
+  baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
-  listoi <- completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
-  baza <- listoi[[1]]
-  arefwork <-listoi[[2]]
+  listoi = completare(baza, arefwork, compa[i,1], compa[i, 2], compa[i, 3])
+  baza = listoi[[1]]
+  arefwork = listoi[[2]]
 }
