@@ -1,4 +1,5 @@
 rm(list = ls(all = TRUE))
+source("get_data.R")
 source("2012-functiigenerale.R")
 #Apel cod pentru locale, referendum şi parlamentare
 source("2012-locale.R")
