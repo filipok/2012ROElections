@@ -5,7 +5,8 @@
 #
 #Acest script prelucrează rezultatele alegerilor locale din 2012 din România
 #
-#Pregătire: del cols C, E, G, I, AQ, AS, AU in x_baza.xlsx & save as x_baza.csv
+#Pregătire: del cols C, E, G, I, AQ, AS, AU in x_baza.xlsx (din x_baza.zip) 
+#& save as x_baza.csv
 #
 ###################################
 #Exemple de utilizare a funcţiilor#

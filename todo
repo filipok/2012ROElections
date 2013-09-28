@@ -1,3 +1,20 @@
+ 1. Excel/CRAN în 2012-parlamentare.R
+ 2. Unzip
+ 3. Automatizare la locale: #Pregătire: del cols C, E, G, I, AQ, AS, AU in x_baza.xlsx & save as x_baza.csv
+ 4. În 2012-locale.R exemplele trebuie separate într-o funcţie nouă.
+ 5. În 2012-locale.R de mutat funcţiile într-un fişier nou.
+ 6. În 2012-parlamentare.R de mutat funcţiile într-un fişier nou.
+ 7. În 2012-parlamentare.R de mutat importul secţiilor în fişier nou.
+ 8. În 2012-parlamentare.R, eventual fişier nou pt codurile Siruta.
+ 9. În 2012-parlamentare.R, fişier nou pentru import Siruta.
+10. În 2012-parlamentare.R, fişier nou pentru verificări?
+11. În 2012-referendum.R, eventual de separat generarea efectivă de import/prelucrare.
+12. În 2012-referendum.R, de ce am numit aşa variabila ref2012SvNat?
+13. În 2012-referendum.R, de separat partea finală comentată.
+14. În 2012-work-locale-referendum-0.2.R, de actualizat denumirile fişierelor şi de schimbat numele lui.
+15. De eliminat, unde e posibil, punctele din colnames.
+16. Schemă grafică cu apelurile de funcţii din alte fişiere.
+
 Pentru diferenţele 1:1două funcţii gen functie(siruta, sectie1, sectie2):
 -corectare (mutare) manuală
 -completare manuală
