@@ -1,0 +1,38 @@
+1. Document loadDump.R
+2, purge CSV files
+3. Automatizare la locale: #Pregătire: del cols C, E, G, I, AQ, AS, AU in x_baza.xlsx & save as x_baza.csv
+ 4. În 2012-parlamentare.R, fişier nou pentru verificări?
+ 5. În 2012-referendum.R, de ce am numit aşa variabila ref2012SvNat?
+ 6. În 2012-referendum.R, de separat partea finală comentată.
+ 7. În 2012-work-locale-referendum-0.2.R, de actualizat denumirile fişierelor şi de schimbat numele lui.
+ 8. De eliminat, unde e posibil, punctele din colnames.
+ 9. Schemă grafică cu apelurile de funcţii din alte fişiere.
+
+din 2012-locale: #?funcţii pentru selectarea unui anumit judeţ sau comune din judeţ
+#CARE E SURSA DIFERENŢELOR DINTRE TAP ŞI SITUAŢIA PRE-ALEGERI?#
+
+Pentru diferenţele 1:1două funcţii gen functie(siruta, sectie1, sectie2):
+-corectare (mutare) manuală
+-completare manuală
+
+Pentru diferenţele 2:2 de obicei sunt secţii cu denumiri f asemănătoare şi ar trebui setată o distanţă foarte mică, cu condiţionare pe nr. alegători (să fie diferenţa minimă)
+
+
+
+Pentru diferenţele 2:1 - secţii „sparte” de la ref la par, nu am ce face, eventual le unesc ulterior
+
+Pentru diferenţele 1:2 - secţii unite de la ref la par sau secţii turistice doar ref
+
+Pentru diferenţele 3:3 un test ca la 2:2, plus corectări manuale :)
+
+54975 şi 40198 - Alba Iulia şi Braşov - nr secţii schimbat
+
+179196 - manual?
+
+13169 - aceleaşi numere până la 36...
+
+9262 - eroare la secţia 40, altele sunt decalate sau mai multe... de băgat distanţă foarte mare?
+
+130534 - variaţie denumire adresă par... eroare la şc. nr. 18
+
+xlsReadWrite() a fost scoasă din CRAN
