@@ -1,16 +1,10 @@
-######################################################
-#PRELUCRARE REZULTATE PARLAMENTARE 2012 DE LA BEC
-######################################################
+#Source the file below:
+#source("loadDump.R")
+#or if you prefer the raw data:
+#source("get_data.R")
 
-#Atenţie! Aici şterg tot ce e în memoria R.
-#rm(list = ls(all = TRUE))
-
-source("2012-parlamentare-voturi.R")
-
-
-
-#Producerea datelor pentru fiecare nivel (secţie, localitate, colegiu, judeţ)
-source("2012-parlamentare-functions.R")
+#Load the required functions
+source("parlFunctions.R")
 
 #date pe secţie de votare
 senSv = TransformTabelParl(sen)
@@ -25,17 +19,15 @@ cdepColegiu = CumulatColegiu(cdepSv)
 senJudet = CumulatJudet(senSv)
 cdepJudet = CumulatJudet(cdepSv)
 
-source("2012-parlamentare-sectii.R")
-
 #Facem un JOIN între cdepSv/senSv şi judete pentru codul Siruta
 cdepSv = merge(cdepSv, romania, all.x = TRUE)
 senSv = merge(senSv, romania, all.x = TRUE)
 
-source("2008-siruta.R")
+#Scurtăm codul Siruta, pentru a corespunde formatului de la ROAEP
+siruta2008[4] = sapply(siruta2008[4], function(qqq) strtrim(qqq,nchar(qqq)-1))
 
-#######################################################################
+
 #Facem JOIN-ul final între cdepSv/senSv şi siruta2008 pentru lat/long
-#######################################################################
 colnames(siruta2008)[4] = "SirutaComp" #pregătire nume coloană pentru merge
 cdepSv = merge(cdepSv, siruta2008[c("X", "Y", "SirutaComp")], all.x = TRUE, 
                  sort = FALSE)
@@ -64,12 +56,8 @@ senSv = merge(senSv, siruta2008[c("X", "Y", "SirutaComp")], all.x = TRUE,
 #}
 #dev.off()
 
-#ştergem variabile temporare
-rm(romania, judete, i, k, lista, nume, randInitial, sheetAles)
 
-###########
-#EXPORT CSV
-###########
+#Uncomment to export general(Parliament) election data to the CSV folder
 #La nivel de secţie de votare, cu cod SIRUTA şi lat/long
 #write.table(x=cdepSv, file="CSV/2012cdepsv.csv", row.names = FALSE)
 #write.table(x=senSv, file="CSV/2012sensv.csv", row.names = FALSE)

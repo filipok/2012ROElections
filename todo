@@ -1,6 +1,6 @@
- 1. Excel/CRAN în 2012-parlamentare.R
- 2. De pus pas intermediar cu export CSV, reimport CSV.
- 3. Automatizare la locale: #Pregătire: del cols C, E, G, I, AQ, AS, AU in x_baza.xlsx & save as x_baza.csv
+1. Document loadDump.R
+2, purge CSV files
+3. Automatizare la locale: #Pregătire: del cols C, E, G, I, AQ, AS, AU in x_baza.xlsx & save as x_baza.csv
  4. În 2012-parlamentare.R, fişier nou pentru verificări?
  5. În 2012-referendum.R, de ce am numit aşa variabila ref2012SvNat?
  6. În 2012-referendum.R, de separat partea finală comentată.

@@ -1,28 +1,22 @@
 rm(list = ls(all = TRUE))
-source("get_data.R")
-source("2012-functiigenerale.R")
-#Apel cod pentru locale, referendum şi parlamentare
-source("2012-locale.R")
-source("2012-referendum.R")
-source("2012-parlamentare.R")
+#Source first the files below:
+source("loadDump.R")
+#or if you prefer the raw data:
+#source("get_data.R")
 
 #Un data frame pentru fiecare listă de secţii de votare, incl. nr. de alegători
 aLoc = merge(numeSecLoc2012, 
-               alegLoc2012[c("DEN_JUD", "CIRC", 
+               alegLocale2012[c("DEN_JUD", "CIRC", 
                                "SV", "Numar.alegatori")], 
                sort = FALSE)
 aPar = numeSecParl2012
 aRef = ref2012Sv[1:9]
 
-#Şterg datele care nu-mi folosesc pe moment
-rm(CJU, CLO, PCJ, PRI, TUR2, alegLoc2012, cdep, cdepCirc, cdepColegiu, 
-   cdepJudet, cdepsSv, echivalareCoduri, newPrim, numeSecLoc2012,
-   numeSecParl2012, ref2012Circ, ref2012CircPro, ref2012Jud,
-   ref2012JudPro, ref2012Nat, ref2012Sv, ref2012SvNat, 
-   ref2012SvPro, sen, senCirc, senColegiu, senJudet, senSv, AbsolutCirc, 
-   AbsolutJudet, AbsolutSv, CumulatCirc, CumulatColegiu, CumulatJudet, Procente,
-   ProcenteRef, SimpLocale2012, TransformTabel, TransformTabelParl)
+#Remove some data from memory
+rm(TUR2, alegLocale2012, cdep, echivalareCoduri, newPrim, numeSecLoc2012, 
+   numeSecParl2012, ref2012Sv, romania, sen, siruta2008, CJU, CLO, PCJ)
 
+#Uniformizarea ortografiei
 Ghilimele = function(x){
   x = gsub("„", "=",x)
   x = gsub("”", "=",x)
@@ -32,7 +26,6 @@ Ghilimele = function(x){
   x = gsub("\"", "=",x)
   x  
 }
-
 Prelucrari = function(x){
   x = chartr("ăâîşţĂÂÎŞŢ", "aaistaaist", x) #elimin diacriticele
   x = toupper(x) #majuscule
@@ -41,12 +34,10 @@ Prelucrari = function(x){
   x = Ghilimele(x)
   x = gsub("([0-9A-Z])=([0-9A-Z])", "\\1 =\\2", x) #ghilimele fără spaţii înainte
 }
-
 #Prelucrari adresa
 aPar$Adresa.parl = Prelucrari(aPar$Adresa.parl)
 aLoc$adresa = Prelucrari(aLoc$adresa)
 aRef$adresa = Prelucrari(aRef$adresa)
-
 #de individualizat coloanele SV şi adresa
 colnames(aPar)[5] = "SV.par"
 colnames(aLoc)[3] = "SV.loc"
@@ -54,7 +45,6 @@ colnames(aRef)[6] = "SV.ref"
 colnames(aLoc)[7] = "adresa.loc"
 colnames(aPar)[8] = "adresa.par"
 colnames(aRef)[7] = "adresa.ref"
-
 #Prelucrări DEN_CIRC
 aPar$DEN_CIRC = Prelucrari(aPar$DEN_CIRC)
 aRef$DEN_CIRC_R = Prelucrari(aRef$DEN_CIRC_R)
@@ -84,24 +74,19 @@ baza[,11] = as.integer(NA)
 baza[,12] = as.character(NA)
 baza[,13] = as.integer(NA)
 
-rm(statss)
 #coeficienţii pentru căutare
 distanta = 0.3
 distanta2 = 0.4
 distanta3 = 0.5
 procent = 0.05
 
-#bucată de activat dacă folosim data.table
-# baza = as.data.table(baza)
-# arefwork = as.data.table(arefwork)
-
 #splitare date pe siruta
 listapar = split(baza, as.numeric(baza$siruta))
 listaref = split(arefwork, arefwork$siruta)
 
+source("precCombCompareFunctions.R") #încărcăm funcţiile apelate în loop
 timp3 = Sys.time()
 pb = txtProgressBar(min = 0, max = length(unique(aPar$siruta)), style = 3)
-source("2012-work-functiicomparare.R") #încărcăm funcţiile apelate în loop
 for(i in 1:length(unique(aPar$siruta))){ #pt fiecare localitate facem câteva teste
   setTxtProgressBar(pb, i)
   #1. Acum testăm în funcţie de adresă
@@ -180,13 +165,13 @@ arefwork = do.call("rbind", listaref)
 rm(listapar, listaref)
 
 #apelare cod modificări manuale
-source("2012-par-ref-manual.R")
+source("precCombManualParlRef.R")
 
 #siru = 1213; vezi(baza[baza$siruta == siru,])
 #vezi(arefwork[arefwork$siruta == siru,])
 
 
-#analiză distribuţie secţii găsite
+#Analiză distribuţie secţii găsite
 numarSectii = table(baza[, 3])
 numarSectii = as.data.frame(numarSectii)
 gasite = !is.na(baza[, 11])
@@ -209,7 +194,7 @@ print(paste("mai am", sum(statss$nepar), "secţii negăsite"))
 timp2 = Sys.time()
 
 print(paste("a durat", timp2 - timp1, "minute, din care loop-ul", timp4 - timp3))
-beep(10)
+#beep(10)
 
 
 # vezi(statss[statss$nepar == 1 & statss$neref == 1,])

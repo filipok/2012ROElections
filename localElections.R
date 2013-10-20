@@ -1,10 +1,12 @@
-#Source first the files below:
-source("get_data.R")
-source("2012-locale.R")
-source("2012-locale-functions.R")
+#Source the file below:
+#source("loadDump.R")
+#or if you prefer the raw data:
+#source("get_data.R")
 
+#Load the required functions
+source("localFunctions.R")
 
-#Exemple de utilizare a funcţiilor#
+#Examples:
 
 #pe judeţ pentru cele unde avem CIRC = 0
 cjuAbsJud = AbsolutJudet(CJU)
