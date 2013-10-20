@@ -1,6 +1,5 @@
-################################################################################
-#FUNCŢII
-################################################################################
+#Functions used to process local election data
+
 TransformTabel = function (x, indepAgreg = FALSE){
   #funcţie de transformare în tabel
   workTransf = x

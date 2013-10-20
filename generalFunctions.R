@@ -13,3 +13,14 @@ beep = function(n = 3){
     Sys.sleep(.5)
   }
 }
+
+#source: (http://thebiobucket.blogspot.ro/2013/04/download-files-from-dropbox.html
+dl_from_dropbox <- function(x, key) {
+  require(RCurl)
+  bin <- getBinaryURL(paste0("https://dl.dropboxusercontent.com/s/", key, "/", x),
+                      ssl.verifypeer = FALSE)
+  con <- file(x, open = "wb")
+  writeBin(bin, con)
+  close(con)
+  message(noquote(paste(x, "read into", getwd())))                        
+}

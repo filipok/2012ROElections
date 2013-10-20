@@ -1,5 +1,5 @@
-#în continuare definesc câteva funcţii pentru prelucrare
-#în principal, fac un reshape de la format long la wide
+#Functions used to process parliament(general) election data
+#Basically, I reshape from long to wide
 
 TransformTabelParl = function (x, indepAgreg = FALSE){
   #funcţie de transformare a datelor de la BEC în tabel de tip "wide"

@@ -1,9 +1,13 @@
 
 #IMPORT SECTII DE VOTARE PARLAMENTARE 2012 DE LA ROAEP
 
+# Package removed from repository: 
+# http://cran.r-project.org/web/packages/xlsReadWrite/index.html
 library(xlsReadWrite) #Este necesară utilizarea pachetului xlsReadWrite
+
 #Sursa datelor: http://www.roaep.ro/ro/section.php?id=25&l2=48&ids=121&an=2012
 #(descărcate la 27.12.2012)
+
 lista = list.files("2012parlamentare\\SV_ROAEP\\judete") #A se schimba după caz
 judete = list()
 #Fişierele ROAEP sunt în general similare, dar mai apar diferenţe în privinţa

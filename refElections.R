@@ -1,4 +1,7 @@
-source("2012-referendum-voturi.R")
+#Source the file below:
+#source("loadDump.R")
+#or if you prefer the raw data:
+#source("get_data.R")
 
 #am siruta la referendum şi am şi la sv.xlsx în locale 2012
 #

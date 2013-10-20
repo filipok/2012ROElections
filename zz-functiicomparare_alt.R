@@ -1,3 +1,5 @@
+#Precinct comparison functions based on different data structures
+#Currently abandoned.
 library("data.table")
 
 testadresaDT = function(lista1, lista2, distanta){

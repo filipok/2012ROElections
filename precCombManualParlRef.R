@@ -1,3 +1,6 @@
+#Aici sunt apelate funcţiile completare() şi corectare(), care se găsesc în
+#precCombCompareFunctions.R
+
 #completări manuale acolo unde lipsesc 1 secţie la parlamentare şi 1 secţie la 
 #referendum; matricele sunt introduse byrow; la corma primul număr este codul 
 #siruta, al doilea este secţia de unde este scoasă înregistrarea, iar al treilea
@@ -95,7 +98,7 @@ compa = matrix(c(103764, 154, 153,
                   99370, 625, 624
 ), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
-  print(i)
+  #print(i)
   baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
@@ -327,7 +330,7 @@ compa = matrix(c(105570, 215, 209,
                   168452, 117, 119,
                   168452, 118, 120), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
-  print(i)
+  #print(i)
   baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
@@ -418,7 +421,7 @@ compa = matrix(c(119331, 189, 180,
                   98998, 596, 596,
                   98998, 598, 598), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
-  print(i)
+  #print(i)
   baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
@@ -507,7 +510,7 @@ compa = matrix(c(100004, 692, 695,
                   97606, 482, 482,
                   97606, 483, 483), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
-  print(i)
+  #print(i)
   baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
@@ -566,7 +569,7 @@ compa = matrix(c(120860, 109, 109,
                   98505, 544, 544,
                   98505, 546, 546), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
-  print(i)
+  #print(i)
   baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
@@ -1029,7 +1032,7 @@ compa = matrix(c(155350, 214, 214,
                   54975, 173, 150,
                   54975, 174, 151), ncol = 3, byrow = TRUE)
 for(i in 1:nrow(corma)){
-  print(i)
+  #print(i)
   baza = corectare(baza, corma[i,1],corma[i,2],corma[i,3])
 }
 for(i in 1:nrow(compa)){
