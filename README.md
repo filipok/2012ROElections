@@ -10,7 +10,7 @@ General (Parliament) elections (two chambers), December 2012. Details: https://r
 
 Data sources
 ---------------------------------
-*Later*
+*Under construction*. Some details in parlElectionsReadme.txt (in Romanian)
 
 Download and load the data
 ---------------------------------
@@ -27,11 +27,13 @@ For **local elections**, load **localElections.R**. It requires **localFunctions
 
 For **general (Parliament) elections**, run **parlElections.R**. It requires **parlFunctions.R**.
 
-For the **referendum**, run **refElections**.
+For the **referendum**, run **refElections.R**.
+
 
 Work in progress
 ---------------------------------
 
+**chartsLocalRef** -> some charts using local elections and referendum data.
+
 **precComb...** files -> combining local, referendum and precinct data.
 
-**2012-work-locale....** -> currently does not work.
