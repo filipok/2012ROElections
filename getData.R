@@ -1,3 +1,5 @@
+# This requires the package xlsReadWrite, unfortunately not available on CRAN anymore
+
 #Clear everything
 rm(list = ls(all = TRUE))
 

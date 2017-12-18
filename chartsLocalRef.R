@@ -81,8 +81,8 @@ referendum[referendum$siruta == 180091,c(46,47)] = siruta2008[siruta2008$SIRUTA 
 
 #culori partide
 culori = c("blue", "red", "green", "white", "brown", "pink", "white", "white",
-            "white", "lightgreen", "black", "yellow", "white", "white")
-names(culori) = unique(referendum$abrevi)
+            "white", "lightgreen", "black", "yellow", "black", "white", "white")
+names(culori) = unique(referendum$abrevi) #for some reason, referendum$abrevi has some NA values now
 
 #primarii locale 2012 pe toată România
 pdf("2012-romania.pdf")
