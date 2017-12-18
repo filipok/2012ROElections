@@ -1,3 +1,5 @@
+WARNING: CURRENTLY NOT WORKING ON UBUNTU 16.04, TO BE REPAIRED
+
 Some background on the 2012 Romanian elections 
 ---------------------------------
 
@@ -8,6 +10,11 @@ Impeachment referendum, July 2012. Details: https://ro.wikipedia.org/wiki/Refere
 General (Parliament) elections (two chambers), December 2012. Details: https://ro.wikipedia.org/wiki/Alegeri_legislative_%C3%AEn_Rom%C3%A2nia,_2012
 
 
+Requirements (Ubuntu 16.04)
+-----------------
+> install.packages('R2HTML')
+
+
 Data sources
 ---------------------------------
 *Under construction*. Some details in parlElectionsReadme.txt (in Romanian)
@@ -15,7 +22,7 @@ Data sources
 Download and load the data
 ---------------------------------
 
-To get the source data, run **getData.R**. Data is hosted on Dropbox, see the code for details. If you don't feel like re-running most of the pre-processing phase, then use **loadDump.R** (which was created by running **writeDump.R**). It will load the required objects into the memory.
+To get the source data, run **getData.R**. Data is hosted on Amazon S3. If you don't feel like re-running most of the pre-processing phase, then use **loadDump.R** (which was created by running **writeDump.R**). It will load the required objects into the memory.
 
 **getData.R** requires **getGenElePrecinct.R** and **generalFunctions.R**.
 

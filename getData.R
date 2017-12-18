@@ -1,14 +1,11 @@
 #Clear everything
 rm(list = ls(all = TRUE))
 
-#Get data from Dropbox (zipped files) and unzip files
 
-#You can get the raw data files from:
-#https://www.dropbox.com/s/1zt0087rd3vnqwl/2012data.zip
 
 #Download zip archive
 source("generalFunctions.R")
-dl_from_dropbox("2012data.zip", "1zt0087rd3vnqwl")
+download.file("https://s3-eu-west-1.amazonaws.com/2012roelections-r/2012data.zip", "2012data.zip")
 
 #Unzip files:
 unzip("2012data.zip", overwrite = FALSE)

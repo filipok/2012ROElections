@@ -3,8 +3,8 @@ rm(list = ls(all = TRUE))
 
 #Download and unzip
 source("generalFunctions.R")
-dl_from_dropbox("datadump.zip", "gsui6i52muiu76d")
-unzip("datadump.zip", overwrite = FALSE)
+download.file("https://s3-eu-west-1.amazonaws.com/2012roelections-r/datadump.zip", "datadump.zip")
+unzip("datadump.zip", exdir="datadump", overwrite = FALSE)
 
 #Load local elections data
 TUR2 = dget("datadump/TUR2.R")
